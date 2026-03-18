@@ -1,8 +1,160 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿
+@{
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container-fluid mt-4">
+
+    <h2 class="mb-4">Ticket Dashboard</h2>
+
+
+    <div class="row">
+
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Open Tickets</h5>
+                    <h2>28</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">In Progress</h5>
+                    <h2>14</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Resolved</h5>
+                    <h2>52</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-danger mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Overdue</h5>
+                    <h2>5</h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row mt-4">
+
+        <div class="col-md-6">
+            <div class="card p-3">
+                <h5>Tickets by Status</h5>
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card p-3">
+                <h5>Tickets by Priority</h5>
+                <canvas id="priorityChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card mt-4">
+
+        <div class="card-header">
+            <h5>Recent Tickets</h5>
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-bordered table-hover">
+
+                <thead class="table-light">
+                    <tr>
+                        <th>Ticket ID</th>
+                        <th>Subject</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Assigned To</th>
+                        <th>Created</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>#1021</td>
+                        <td>Login not working</td>
+                        <td><span class="badge bg-warning">In Progress</span></td>
+                        <td><span class="badge bg-danger">High</span></td>
+                        <td>John</td>
+                        <td>15 Mar</td>
+                    </tr>
+
+                    <tr>
+                        <td>#1020</td>
+                        <td>Email issue</td>
+                        <td><span class="badge bg-primary">Open</span></td>
+                        <td><span class="badge bg-warning">Medium</span></td>
+                        <td>Sarah</td>
+                        <td>14 Mar</td>
+                    </tr>
+
+                    <tr>
+                        <td>#1019</td>
+                        <td>Printer not working</td>
+                        <td><span class="badge bg-success">Resolved</span></td>
+                        <td><span class="badge bg-secondary">Low</span></td>
+                        <td>Mike</td>
+                        <td>13 Mar</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+@* <script>
+
+    const statusChart = new Chart(
+        document.getElementById('statusChart'),
+        {
+            type: 'doughnut',
+            data: {
+                labels: ['Open', 'In Progress', 'Resolved'],
+                datasets: [{
+                    data: [28, 14, 52]
+                }]
+            }
+        }
+    );
+
+
+    const priorityChart = new Chart(
+        document.getElementById('priorityChart'),
+        {
+            type: 'bar',
+            data: {
+                labels: ['Low', 'Medium', 'High'],
+                datasets: [{
+                    label: 'Tickets',
+                    data: [12, 24, 18]
+                }]
+            }
+        }
+    );
+
+</script> *@
