@@ -1,9 +1,11 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TicketManagementSystem.Models;
 
 namespace TicketManagementSystem.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         public IActionResult Index()

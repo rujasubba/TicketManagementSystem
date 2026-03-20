@@ -11,10 +11,6 @@ namespace TicketManagementSystem.Services
             var users = new User()
             {
                 Id = user.Id,
-                Name = user.Name,
-                Role = user.Role,
-                Email = user.Email,
-                Password = user.Password,
                 PhoneNumber = user.PhoneNumber,
                 IsActive = user.IsActive
             };
