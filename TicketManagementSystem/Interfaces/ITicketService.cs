@@ -6,11 +6,11 @@ namespace TicketManagementSystem.Interfaces
     public interface ITicketService
     {
     
-            Task<List<Ticket>> GetAllAsync();
+            Task<List<TicketListDto>> GetAllAsync();
             Task<Ticket> GetByIdAsync(int id);
             Task<Ticket> CreateAsync(CreateTicketDto model);
-            Task<bool> UpdateAsync(Ticket ticket);
-            Task<bool> DeleteAsync(int id);
+            Task<Ticket> UpdateAsync(UpdateTicketDto model);
+            Task DeleteAsync(int id);
      
     }
 }

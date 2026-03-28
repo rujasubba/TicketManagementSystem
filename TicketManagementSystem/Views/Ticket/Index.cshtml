@@ -1,0 +1,46 @@
+﻿@model List<TicketManagementSystem.DTOs.Ticket.TicketListDto>;
+
+
+<h1>This is the list of all tickets</h1>
+<div class="row">
+<table class="table">
+  <thead>
+      <tr>
+            <th>Ticket No</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Priority</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Department</th>
+            <th>Created On</th>
+            <th>Action</th>
+      </tr>
+            
+  </thead>
+   <tbody>
+            @foreach (var item in Model)
+          
+            {
+                <tr>
+                    <td>@item.TicketNo</td>
+                    <td>@item.Title</td>
+                    <td>@item.Description</td>
+                    <td>@item.Priority</td>
+                    <td>@item.Category</td>
+                    <td>@item.Status</td>
+                    <td>@item.Department</td>
+                    <td>@item.CreatedDate</td>
+                   <td>
+                        <a href="/Ticket/Edit/@item.Id">Edit</a> |
+                       <a href="/Ticket/Delete/@item.Id">Delete</a>
+                 </td>
+                </tr>
+
+             
+
+            }
+   </tbody>
+</table>
+</div>
+

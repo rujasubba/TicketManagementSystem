@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TicketManagementSystem.Persistent;
 
@@ -11,9 +12,11 @@ using TicketManagementSystem.Persistent;
 namespace TicketManagementSystem.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260325050659_SeedPriorityAndStatus")]
+    partial class SeedPriorityAndStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -248,17 +251,12 @@ namespace TicketManagementSystem.Migrations
                         new
                         {
                             StatusId = 2,
-                            Name = "Closed"
-                        },
-                        new
-                        {
-                            StatusId = 3,
                             Name = "In Progress"
                         },
                         new
                         {
-                            StatusId = 4,
-                            Name = "Declined"
+                            StatusId = 3,
+                            Name = "Closed"
                         });
                 });
 

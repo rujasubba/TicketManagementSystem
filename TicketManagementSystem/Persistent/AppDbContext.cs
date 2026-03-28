@@ -55,6 +55,20 @@ namespace TicketManagementSystem.Persistent
             .HasForeignKey(t => t.DepartmentId)
             .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Priority>().HasData(
+            new Priority { PriorityId = 1, Name = "Low" },
+            new Priority { PriorityId = 2, Name = "Medium" },
+            new Priority { PriorityId = 3, Name = "High" }
+
+     );
+        modelBuilder.Entity<Status>().HasData(
+        new Status { StatusId = 1, Name = "Open" },
+        new Status { StatusId = 2, Name = "Closed" },
+        new Status { StatusId = 3, Name = "In Progress" },
+        new Status { StatusId = 4, Name = "Declined" }
+
+   );
+
             base.OnModelCreating(modelBuilder);
         }
 

@@ -2,8 +2,8 @@
 {
     public class Priority
     {
-        public int Id { get; set; }
-        public string Type { get; set; }
+        public int PriorityId { get; set; }
+        public string Name { get; set; }
         public ICollection<Ticket> Tickets { get; set; }
     }
 }

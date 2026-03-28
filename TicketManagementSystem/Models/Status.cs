@@ -2,7 +2,7 @@
 {
     public class Status
     {
-        public int Id { get; set; }
+        public int StatusId { get; set; }
         public string Name { get; set; }
         public ICollection<Ticket> Tickets {get; set; }
 

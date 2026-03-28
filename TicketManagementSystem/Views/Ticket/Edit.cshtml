@@ -1,0 +1,86 @@
+﻿@model TicketManagementSystem.DTOs.Ticket.UpdateTicketDto
+
+<h2>Edit Ticket</h2>
+
+<form asp-controller="Ticket" asp-action="Edit" method="post">
+
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label>Title</label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Description</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Priority</label>
+        <select asp-for="PriorityId" class="form-control">
+            @foreach (var item in ViewBag.Priorities)
+            {
+                <option value="@item.PriorityId"
+                        selected="@(item.PriorityId == Model.PriorityId)">
+                    @item.Name
+                </option>
+            }
+        </select>
+        <span asp-validation-for="PriorityId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Category</label>
+        <select asp-for="CategoryId" class="form-control">
+            @foreach (var item in ViewBag.Categories)
+            {
+                <option value="@item.CategoryId"
+                        selected="@(item.CategoryId == Model.CategoryId)">
+                    @item.Name
+                </option>
+            }
+        </select>
+        <span asp-validation-for="CategoryId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Status</label>
+        <select asp-for="StatusId" class="form-control">
+            @foreach (var item in ViewBag.Statuses)
+            {
+                <option value="@item.StatusId"
+                        selected="@(item.StatusId == Model.StatusId)">
+                    @item.Name
+                </option>
+            }
+        </select>
+        <span asp-validation-for="StatusId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Department</label>
+        <select asp-for="DepartmentId" class="form-control">
+            @foreach (var item in ViewBag.Departments)
+            {
+                <option value="@item.DepartmentId"
+                        selected="@(item.DepartmentId == Model.DepartmentId)">
+                    @item.Name
+                </option>
+            }
+        </select>
+        <span asp-validation-for="DepartmentId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Update Ticket
+    </button>
+
+</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

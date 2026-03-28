@@ -24,9 +24,11 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.ExpireTimeSpan = TimeSpan.FromMinutes(500);
     options.SlidingExpiration = false;
 });
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITicketService, TicketService>();
+builder.Services.AddScoped<IcategoryService, CategoryService>();
 
 var app = builder.Build();
 
