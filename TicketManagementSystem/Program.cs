@@ -24,6 +24,20 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.ExpireTimeSpan = TimeSpan.FromMinutes(500);
     options.SlidingExpiration = false;
 });
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Events.OnRedirectToLogin = context =>
+    {
+        if (context.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+        {
+            context.Response.StatusCode = 401;
+            return Task.CompletedTask;
+        }
+        context.Response.Redirect(context.RedirectUri);
+        return Task.CompletedTask;
+    };
+});
+
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<IUserService, UserService>();

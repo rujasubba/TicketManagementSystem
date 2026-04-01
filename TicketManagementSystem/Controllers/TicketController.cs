@@ -17,8 +17,6 @@ namespace TicketManagementSystem.Controllers
             return View(ticketList);
         }
 
-
-
         [HttpGet]
         public IActionResult Create()
         {
@@ -26,7 +24,7 @@ namespace TicketManagementSystem.Controllers
             ViewBag.Statuses = dbContext.Status.ToList();
             ViewBag.Categories = dbContext.Categories.ToList();
             ViewBag.Departments = dbContext.Departments.ToList();
-            return View();
+            return PartialView();
         }
 
         [HttpPost]
@@ -44,7 +42,7 @@ namespace TicketManagementSystem.Controllers
             if (createdTicket == null)
             {
                 ModelState.AddModelError("", "Failed to create ticket");
-                return View(model);
+                return PartialView(model);
             }
 
             return RedirectToAction("Index");
@@ -98,6 +96,17 @@ namespace TicketManagementSystem.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
+        {
+            var ticket = await service.GetByIdAsync(id);
+            if(ticket == null)
+            {
+                return NotFound();
+            }
+            return PartialView(ticket);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await service.DeleteAsync(id);
             return RedirectToAction("Index");

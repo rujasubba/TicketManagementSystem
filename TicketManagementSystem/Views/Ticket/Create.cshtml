@@ -1,76 +1,77 @@
 ﻿@model TicketManagementSystem.DTOs.Ticket.CreateTicketDto
 
-<h2>Create Ticket</h2>
+<div class="modal-header bg-primary text-white">
+    <h5 class="modal-title">Create Ticket</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
 
-<form asp-controller="Ticket" asp-action="Create" method="post">
+<div class="modal-body">
+    <form asp-controller="Ticket" asp-action="Create" method="post" id="createTicketForm">
+        @Html.AntiForgeryToken()
 
-    @Html.AntiForgeryToken()
+        <div class="mb-3">
+            <label>Title</label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
 
-    <div class="mb-3">
-        <label>Title</label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
-    </div>
+        <div class="mb-3">
+            <label>Description</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
 
-    <div class="mb-3">
-        <label>Description</label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
+        <div class="mb-3">
+            <label>Priority</label>
+            <select asp-for="Priority" class="form-control">
+                <option value="">-- Select --</option>
+                @foreach (var item in ViewBag.Priorities)
+                {
+                    <option value="@item.PriorityId">@item.Name</option>
+                }
+            </select>
+            <span asp-validation-for="Priority" class="text-danger"></span>
+        </div>
 
-    <div class="mb-3">
-        <label>Priority</label>
-        <select asp-for="Priority" class="form-control">
-            <option value="">-- Select --</option>
-            @foreach (var item in ViewBag.Priorities)
-            {
-                <option value="@item.PriorityId">@item.Name</option>
-            }
-        </select>  
-        <span asp-validation-for="Priority" class="text-danger"></span>
-    </div>
+        <div class="mb-3">
+            <label>Category</label>
+            <select asp-for="Category" class="form-control">
+                <option value="">-- Select --</option>
+                @foreach (var item in ViewBag.Categories)
+                {
+                    <option value="@item.CategoryId">@item.Name</option>
+                }
+            </select>
+            <span asp-validation-for="Category" class="text-danger"></span>
+        </div>
 
-    <div class="mb-3">
-        <label>Category</label>
-        <select asp-for="Category" class="form-control">
-            <option value="">-- Select --</option>
-            @foreach (var item in ViewBag.Categories)
-            {
-                <option value="@item.CategoryId">@item.Name</option>
-            }
-        </select>
-        <span asp-validation-for="Category" class="text-danger"></span>
-    </div>
+        <div class="mb-3">
+            <label>Status</label>
+            <select asp-for="Status" class="form-control">
+                <option value="">-- Select --</option>
+                @foreach (var item in ViewBag.Statuses)
+                {
+                    <option value="@item.StatusId">@item.Name</option>
+                }
+            </select>
+            <span asp-validation-for="Status" class="text-danger"></span>
+        </div>
 
-    <div class="mb-3">
-        <label>Status</label>
-        <select asp-for="Status" class="form-control">
-            <option value="">-- Select --</option>
-            @foreach (var item in ViewBag.Statuses)
-            {
-                <option value="@item.StatusId">@item.Name</option>
-            }
-        </select>
-        <span asp-validation-for="Status" class="text-danger"></span>
-    </div>
+        <div class="mb-3">
+            <label>Department</label>
+            <select asp-for="Department" class="form-control">
+                <option value="">-- Select --</option>
+                @foreach (var item in ViewBag.Departments)
+                {
+                    <option value="@item.DepartmentId">@item.Name</option>
+                }
+            </select>
+            <span asp-validation-for="Department" class="text-danger"></span>
+        </div>
 
-    <div class="mb-3">
-        <label>Department</label>
-        <select asp-for="Department" class="form-control">
-            <option value="">-- Select --</option>
-            @foreach (var item in ViewBag.Departments)
-            {
-                <option value="@item.DepartmentId">@item.Name</option>
-            }
-        </select>
-        <span asp-validation-for="Department" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">
-        Add Ticket
-    </button>
-
-</form>
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Add Ticket</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+    </form>
+</div>
