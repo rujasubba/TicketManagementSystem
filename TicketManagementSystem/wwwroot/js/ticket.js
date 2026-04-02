@@ -1,19 +1,40 @@
-﻿$(document).ready(function () {
+$(document).ready(function () {
+
+    $.ajaxSetup({
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    });
+
+    function handleAjaxError(xhr) {
+        if (xhr.status === 401) {
+            window.location.href = '/Identity/Account/Login';
+        } else {
+            alert("Something went wrong. Status: " + xhr.status);
+        }
+    }
 
     window.openDeleteModal = function (id) {
-        $.ajax({
-            url: '/Ticket/Delete/' + id,
-            type: 'GET',
-            success: function (response) {
-                $('#deleteModalContent').html(response);
-
-                var modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        $.get('/Ticket/Delete/' + id)
+            .done(function (html) {
+                $('#deleteModalContent').html(html);
+                const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
                 modal.show();
-            },
-            error: function () {
-                alert('Unable to load delete confirmation.');
-            }
-        });
+            })
+            .fail(handleAjaxError);
     };
+
+    window.openCreateModal = function () {
+        $.get('/Ticket/Create')
+            .done(function (html) {
+                $('#createTicketModalContent').html(html);
+                const modal = new bootstrap.Modal(document.getElementById('createTicketModal'));
+                modal.show();
+            })
+            .fail(handleAjaxError);
+    };
+
+    $(document).on('click', '#createTicketBtn', function (e) {
+        e.preventDefault();
+        openCreateModal();
+    });
 
 });
