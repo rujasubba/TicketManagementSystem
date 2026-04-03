@@ -1,6 +1,4 @@
-﻿using Humanizer;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
+﻿using Microsoft.EntityFrameworkCore;
 using TicketManagementSystem.DTOs.Ticket;
 using TicketManagementSystem.Interfaces;
 using TicketManagementSystem.Models;

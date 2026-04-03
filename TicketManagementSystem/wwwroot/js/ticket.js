@@ -21,6 +21,11 @@ $(document).ready(function () {
             })
             .fail(handleAjaxError);
     };
+    $(document).on('click', '.btn btn-danger delete-btn', function (e) {
+
+        e.preventDefault();
+        openDeleteModal();
+    });
 
     window.openCreateModal = function () {
         $.get('/Ticket/Create')

@@ -40,7 +40,9 @@
                     <td>@item.CreatedDate.ToString("yyyy-MM-dd")</td>
                    <td>
                         <a href="/Ticket/Edit/@item.Id">Edit</a> |
+                        @* <button type="button" id="deleteTicketBtn" class="btn btn-danger delete-btn">Delete</button> *@
                         <a href="javascript:void(0);" class="text-danger" onclick="openDeleteModal(@item.Id)">Delete</a>
+                       
                  </td>
                 </tr>
                 index++;

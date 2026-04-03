@@ -15,6 +15,7 @@ namespace TicketManagementSystem.Persistent
         public DbSet<Status> Status { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Priority> Priorities { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

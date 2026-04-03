@@ -1,6 +1,9 @@
-﻿
+﻿@model List<TicketManagementSystem.DTOs.Ticket.TicketListDto>;
 @{
     ViewData["Title"] = "Dashboard";
+    var openTickets = Model.Count(t => t.Status == "Open");
+    var inProgressTickets = Model.Count(t => t.Status == "In Progress");
+    var resolvedTickets = Model.Count(t => t.Status == "Closed");
 }
 
 <div class="container-fluid mt-4">
@@ -11,7 +14,7 @@
             <div class="card text-white bg-primary mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Open Tickets</h5>
-                    <h2>28</h2>
+                    <h2>@openTickets</h2>
                 </div>
             </div>
         </div>
@@ -20,7 +23,7 @@
             <div class="card text-white bg-warning mb-3">
                 <div class="card-body">
                     <h5 class="card-title">In Progress</h5>
-                    <h2>14</h2>
+                    <h2>@inProgressTickets</h2>
                 </div>
             </div>
         </div>
@@ -29,7 +32,7 @@
             <div class="card text-white bg-success mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Resolved</h5>
-                    <h2>52</h2>
+                    <h2>@resolvedTickets</h2>
                 </div>
             </div>
         </div>

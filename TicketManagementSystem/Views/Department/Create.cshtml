@@ -1,0 +1,23 @@
+﻿@model TicketManagementSystem.DTOs.Department.CreateDepartmentDto
+
+<div class="modal-header bg-primary text-white">
+    <h5 class="modal-title">Create Department</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+
+<div class="modal-body">
+    <form asp-controller="Department" asp-action="Create" method="post" id="createDepartmentForm">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label>Name</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Add Department</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+    </form>
+</div>
