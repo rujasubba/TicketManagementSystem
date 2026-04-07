@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TicketManagementSystem.DTOs.Ticket;
 using TicketManagementSystem.Interfaces;
+using TicketManagementSystem.Models;
 using TicketManagementSystem.Persistent;
 
 namespace TicketManagementSystem.Controllers
@@ -18,23 +19,23 @@ namespace TicketManagementSystem.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public IActionResult Create(CreateTicketDto model)
         {
             ViewBag.Priorities = dbContext.Priorities.ToList();
             ViewBag.Statuses = dbContext.Status.ToList();
             ViewBag.Categories = dbContext.Categories.ToList();
             ViewBag.Departments = dbContext.Departments.ToList();
-            return PartialView();
+            return PartialView(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateTicketDto model)
+        public async Task<IActionResult> CreateAsync(CreateTicketDto model)
         {
             if (model == null)
             {
                 throw new Exception("Nothing entered");
             }
-           
+
             model.CreatedByUser = UserId;
 
             var createdTicket = await service.CreateAsync(model);
@@ -47,13 +48,17 @@ namespace TicketManagementSystem.Controllers
 
             return RedirectToAction("Index");
         }
+
+
+
         public async Task<IActionResult> Details(int id)
         {
             var ticket = await service.GetByIdAsync(id);
-            if (ticket == null)
-                return NotFound();
+            if (ticket == null) return NotFound();
             return View(ticket);
         }
+
+
 
         public async Task<IActionResult> Edit(int id)
         {
@@ -62,22 +67,24 @@ namespace TicketManagementSystem.Controllers
             {
                 throw new Exception("Ticket not found");
             }
-            var model = new UpdateTicketDto
+            var model = new CreateTicketDto
             {
                 Id = ticket.Id,
                 Title = ticket.Title,
                 Description = ticket.Description,
-                PriorityId = ticket.PriorityId,
-                CategoryId = ticket.CategoryId,
-                StatusId = ticket.StatusId,
-                DepartmentId = ticket.DepartmentId,
+                Priority = ticket.PriorityId,
+                Category = ticket.CategoryId,
+                Status = ticket.StatusId,
+                Department = ticket.DepartmentId,
+                
                
             };
             ViewBag.Priorities = dbContext.Priorities.ToList();
             ViewBag.Statuses = dbContext.Status.ToList();
             ViewBag.Categories = dbContext.Categories.ToList();
             ViewBag.Departments = dbContext.Departments.ToList();
-            return View(model);
+            ViewBag.Users = dbContext.Users.ToList();
+            return View("Create", model);
         }
 
         [HttpPost]

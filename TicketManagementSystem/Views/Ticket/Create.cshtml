@@ -1,6 +1,6 @@
 ﻿@model TicketManagementSystem.DTOs.Ticket.CreateTicketDto
 
-<div class="modal-header bg-primary text-white">
+<div class="modal-header bg-primary text-white justify-content-between p-3">
     <h5 class="modal-title">Create Ticket</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 </div>
@@ -8,7 +8,7 @@
 <div class="modal-body">
     <form asp-controller="Ticket" asp-action="Create" method="post" id="createTicketForm">
         @Html.AntiForgeryToken()
-
+        <input type="hidden" asp-for="Id" />
         <div class="mb-3">
             <label>Title</label>
             <input asp-for="Title" class="form-control" />
@@ -45,17 +45,34 @@
             <span asp-validation-for="Category" class="text-danger"></span>
         </div>
 
-        <div class="mb-3">
-            <label>Status</label>
-            <select asp-for="Status" class="form-control">
-                <option value="">-- Select --</option>
-                @foreach (var item in ViewBag.Statuses)
-                {
-                    <option value="@item.StatusId">@item.Name</option>
-                }
-            </select>
-            <span asp-validation-for="Status" class="text-danger"></span>
-        </div>
+        @if (Model.Id > 0)
+        {
+            <div class="mb-3">
+                <label>Assigned To</label>
+                <select asp-for="AssignedUser" class="form-control">
+                    <option value="">-- Select --</option>
+                    @foreach (var item in ViewBag.Users)
+                    {
+                        <option value="@item.Id">@item.FullName</option>
+                    }
+                </select>
+                <span asp-validation-for="AssignedUser" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label>Status</label>
+                <select asp-for="Status" class="form-control">
+                    <option value="">-- Select --</option>
+                    @foreach (var item in ViewBag.Statuses)
+                    {
+                        <option value="@item.StatusId">@item.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+        }
+
+        
 
         <div class="mb-3">
             <label>Department</label>
@@ -68,6 +85,12 @@
             </select>
             <span asp-validation-for="Department" class="text-danger"></span>
         </div>
+        <div class="mb-3">
+            <label>Comments</label>
+            <textarea asp-for="CommentContent" class="form-control" placeholder="add any notes"></textarea>
+            <span asp-validation-for="CommentContent" class="text-danger"></span>
+        </div>
+        <button type="button" id="addCommentBtn" class="btn btn-success btn-sm"> + </button>
 
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary">Add Ticket</button>

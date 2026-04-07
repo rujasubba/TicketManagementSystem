@@ -28,7 +28,7 @@
    <tbody>
             @foreach (var item in Model)
             {
-                  <tr>
+                <tr id="ticketRow-@item.Id" style="cursor:pointer;">
                     <td>@index</td>
                     <td>@item.TicketNo</td>
                     <td>@item.Title</td>
@@ -39,9 +39,11 @@
                     <td>@item.Department</td>
                     <td>@item.CreatedDate.ToString("yyyy-MM-dd")</td>
                    <td>
-                        <a href="/Ticket/Edit/@item.Id">Edit</a> |
-                        @* <button type="button" id="deleteTicketBtn" class="btn btn-danger delete-btn">Delete</button> *@
+                        <a href="/Ticket/Edit/@item.Id">Edit</a>|
+                    
+                       @*  <a href="javascript:void(0);" class="text-primary" onclick="openEditModal(@item.Id)">Edit</a>| *@
                         <a href="javascript:void(0);" class="text-danger" onclick="openDeleteModal(@item.Id)">Delete</a>
+                        
                        
                  </td>
                 </tr>
@@ -61,6 +63,11 @@
 <div class="modal fade" id="createTicketModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" id="createTicketModalContent"></div>
+    </div>
+</div>
+<div class="modal fade" id="editTicketModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="editTicketModalContent"></div>
     </div>
 </div>
 

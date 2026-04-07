@@ -129,6 +129,7 @@ namespace TicketManagementSystem.Areas.Identity.Pages.Account
                 user.LastName = Input.LastName;
                 user.Address = Input.Address;
                 user.PhoneNumber = Input.PhoneNumber;
+                user.FullName = $"{Input.FirstName} {Input.LastName}";
 
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);

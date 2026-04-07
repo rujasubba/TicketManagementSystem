@@ -12,9 +12,11 @@ namespace TicketManagementSystem.DTOs.Ticket
         public string Category { get; set; }
         public string Status { get; set; }
         public string CreatedByUserId { get; set; }
+        public string CreatedByUserName { get; set; }
         public string? AssignedToUserId { get; set; }
         public string Department { get; set; }
         public DateTime CreatedDate { get; set; }
+       
 
     }
 }

@@ -19,6 +19,7 @@
         public Department Department { get; set; }
         public int DepartmentId { get; set; }
         public DateTime CreatedDate { get; set; }
+        public IEnumerable<Comment> Comments { get; set; }
 
     }
 }

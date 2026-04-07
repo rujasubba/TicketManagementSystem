@@ -5,6 +5,7 @@ namespace TicketManagementSystem.DTOs.Ticket
 {
     public class CreateTicketDto
     {
+        public int Id { get; set; }
         [Required(ErrorMessage ="Title is Required"), MaxLength(150)]
         public string Title { get; set; }
         public string? Description { get; set; }
@@ -19,5 +20,7 @@ namespace TicketManagementSystem.DTOs.Ticket
         [Required(ErrorMessage = "Please select Department")]
         public int Department { get; set; }
         public DateTime CreatedDate { get; set; }
+        public string? CommentContent { get; set; }
+        
     }
 }

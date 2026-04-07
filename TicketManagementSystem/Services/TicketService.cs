@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TicketManagementSystem.DTOs.Comment;
 using TicketManagementSystem.DTOs.Ticket;
 using TicketManagementSystem.Interfaces;
 using TicketManagementSystem.Models;
@@ -15,6 +16,15 @@ namespace TicketManagementSystem.Services
             {
                 throw new Exception("Model cannot be null");
             }
+            var commentList = new List<Comment>();
+
+            commentList.Add(new Comment
+            {
+                Content = model.CommentContent,
+                CreatedByUserId = model.CreatedByUser,
+                CreatedDate = DateTime.Now
+            });
+     
 
             var ticket = new Ticket
             {
@@ -27,7 +37,9 @@ namespace TicketManagementSystem.Services
                 CreatedByUserId = model.CreatedByUser,
                 AssignedToUserId = model.AssignedUser,
                 DepartmentId = model.Department,
-                CreatedDate = DateTime.Now
+                CreatedDate = DateTime.Now,
+                Comments = commentList
+                
             };
             var ticketNo = await dbContext.Tickets.FirstOrDefaultAsync(x => x.TicketNo == ticket.TicketNo);
             if(ticketNo != null)
@@ -62,6 +74,7 @@ namespace TicketManagementSystem.Services
                 .Include(t => t.Category)
                 .Include(t => t.Status)
                 .Include(t => t.Department)
+                .Include(t => t.CreatedByUser)
                 .Select(t => new TicketListDto
                 {
                     Id = t.Id,
@@ -88,18 +101,24 @@ namespace TicketManagementSystem.Services
         .Include(t => t.Category)
         .Include(t => t.Status)
         .Include(t => t.Department)
+        .Include(t => t.Comments)
+        .Include(t => t.AssigenedUser)
+        .Include(t => t.CreatedByUser)
         .FirstOrDefaultAsync(t => t.Id == id);
       
         }
+
 
         public async Task<Ticket> UpdateAsync(UpdateTicketDto dto)
         {
             var ticket = await dbContext.Tickets.FindAsync(dto.Id);
 
-            if (ticket == null) { 
+            if (ticket == null)
+            {
                 throw new Exception("Ticket not found");
             }
-           
+
+
             ticket.Title = dto.Title;
             ticket.Description = dto.Description;
             ticket.PriorityId = dto.PriorityId;

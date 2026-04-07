@@ -56,6 +56,19 @@ namespace TicketManagementSystem.Persistent
             .HasForeignKey(t => t.DepartmentId)
             .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Comment>()
+                .HasOne(t => t.Ticket)
+                .WithMany(c => c.Comments)
+                .HasForeignKey(t => t.TicketId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Comment>()
+                .HasOne(u => u.CreatedByUser)
+                .WithMany(c => c.Comments)
+                .HasForeignKey(u => u.CreatedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
             modelBuilder.Entity<Priority>().HasData(
             new Priority { PriorityId = 1, Name = "Low" },
             new Priority { PriorityId = 2, Name = "Medium" },
