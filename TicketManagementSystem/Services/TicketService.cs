@@ -119,7 +119,10 @@ namespace TicketManagementSystem.Services
 
         public async Task<Ticket> UpdateAsync(CreateTicketDto dto)
         {
-            var ticket = await dbContext.Tickets.FindAsync(dto.Id);
+  
+            var ticket = await dbContext.Tickets
+            .Include(t => t.Comments)
+            .FirstOrDefaultAsync(t => t.Id == dto.Id);
 
             if (ticket == null)
             {
@@ -134,6 +137,52 @@ namespace TicketManagementSystem.Services
             ticket.StatusId = dto.Status;
             ticket.DepartmentId = dto.Department;
             ticket.AssignedToUserId = dto.AssignedUser;
+
+            if (!string.IsNullOrEmpty(dto.AssignedUser))
+            {
+                var user = await dbContext.Users
+                    .FirstOrDefaultAsync(u => u.Id == dto.AssignedUser);
+
+                if (user != null && !string.IsNullOrEmpty(user.Email))
+                {
+                    string subject = $"Ticket Assigned - {ticket.TicketNo}";
+
+                    string body = $@"
+                   <h3>New Ticket Assigned</h3>
+                   <p>Hi {user.FullName},</p>
+
+                    <p>You have been assigned a new ticket.</p>
+
+                    <p><b>Title:</b> {ticket.Title}</p>
+                    <p><b>Description:</b> {ticket.Description}</p>
+                    <p><b>Priority:</b> {ticket.PriorityId}</p>
+
+                      <p>Please check and take action.</p>
+                     ";
+
+                    EmailHelper.SendEmail(user.Email, subject, body);
+                }
+            }
+
+
+
+            var commentList = ticket.Comments.ToList();
+            if (dto.CommentContents != null && dto.CommentContents.Any())
+            {
+                foreach (var comment in dto.CommentContents)
+                {
+                    if (!string.IsNullOrWhiteSpace(comment))
+                    {
+                        commentList.Add(new Comment
+                        {
+                            Content = comment,
+                            CreatedByUserId = dto.CreatedByUser,
+                            CreatedDate = DateTime.Now
+                        });
+                    }
+                }
+            }
+            ticket.Comments = commentList;
 
             await dbContext.SaveChangesAsync();
 

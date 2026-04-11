@@ -77,8 +77,9 @@ namespace TicketManagementSystem.Controllers
                 Category = ticket.CategoryId,
                 Status = ticket.StatusId,
                 Department = ticket.DepartmentId,
-                
-               
+                CreatedByUser = ticket.CreatedByUserId,
+                CreatedDate = ticket.CreatedDate,
+             
             };
             ViewBag.Priorities = dbContext.Priorities.ToList();
             ViewBag.Statuses = dbContext.Status.ToList();
@@ -91,6 +92,8 @@ namespace TicketManagementSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(CreateTicketDto model)
         {
+            model.CreatedByUser = UserId;
+            ModelState.Remove(nameof(model.CreatedByUser));
             if (!ModelState.IsValid)
             {
                 ViewBag.Priorities = dbContext.Priorities.ToList();

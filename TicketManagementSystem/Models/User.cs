@@ -17,5 +17,6 @@ namespace TicketManagementSystem.Models
 
         public IEnumerable<Comment> Comments { get; set; }
         public IEnumerable<Ticket> Tickets { get; set; }
+        public IEnumerable<TicketLog> TicketLogs { get; set; }
     }
 }

@@ -16,6 +16,7 @@ namespace TicketManagementSystem.Persistent
         public DbSet<Category> Categories { get; set; }
         public DbSet<Priority> Priorities { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<TicketLog> TicketLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -67,6 +68,19 @@ namespace TicketManagementSystem.Persistent
                 .WithMany(c => c.Comments)
                 .HasForeignKey(u => u.CreatedByUserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<TicketLog>()
+               .HasOne(u => u.AssignedUser)
+               .WithMany(t => t.TicketLogs)
+               .HasForeignKey(u => u.AssignedUserId)
+               .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<TicketLog>()
+              .HasOne(t => t.Ticket)
+              .WithMany(t => t.TicketLogs)
+              .HasForeignKey(t => t.TicketId)
+              .OnDelete(DeleteBehavior.Restrict);
+
 
 
             modelBuilder.Entity<Priority>().HasData(
