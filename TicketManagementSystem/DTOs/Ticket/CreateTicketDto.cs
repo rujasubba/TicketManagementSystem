@@ -20,7 +20,7 @@ namespace TicketManagementSystem.DTOs.Ticket
         [Required(ErrorMessage = "Please select Department")]
         public int Department { get; set; }
         public DateTime CreatedDate { get; set; }
-        public string? CommentContent { get; set; }
-        
+        public List<string> CommentContents { get; set; } = new();
+
     }
 }

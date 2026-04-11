@@ -18,13 +18,21 @@ namespace TicketManagementSystem.Services
             }
             var commentList = new List<Comment>();
 
-            commentList.Add(new Comment
+            if (model.CommentContents != null && model.CommentContents.Any())
             {
-                Content = model.CommentContent,
-                CreatedByUserId = model.CreatedByUser,
-                CreatedDate = DateTime.Now
-            });
-     
+                foreach (var comment in model.CommentContents)
+                {
+                    if (!string.IsNullOrWhiteSpace(comment))
+                    {
+                        commentList.Add(new Comment
+                        {
+                            Content = comment,
+                            CreatedByUserId = model.CreatedByUser,
+                            CreatedDate = DateTime.Now
+                        });
+                    }
+                }
+            }
 
             var ticket = new Ticket
             {
@@ -109,7 +117,7 @@ namespace TicketManagementSystem.Services
         }
 
 
-        public async Task<Ticket> UpdateAsync(UpdateTicketDto dto)
+        public async Task<Ticket> UpdateAsync(CreateTicketDto dto)
         {
             var ticket = await dbContext.Tickets.FindAsync(dto.Id);
 
@@ -121,10 +129,11 @@ namespace TicketManagementSystem.Services
 
             ticket.Title = dto.Title;
             ticket.Description = dto.Description;
-            ticket.PriorityId = dto.PriorityId;
-            ticket.CategoryId = dto.CategoryId;
-            ticket.StatusId = dto.StatusId;
-            ticket.DepartmentId = dto.DepartmentId;
+            ticket.PriorityId = dto.Priority;
+            ticket.CategoryId = dto.Category;
+            ticket.StatusId = dto.Status;
+            ticket.DepartmentId = dto.Department;
+            ticket.AssignedToUserId = dto.AssignedUser;
 
             await dbContext.SaveChangesAsync();
 

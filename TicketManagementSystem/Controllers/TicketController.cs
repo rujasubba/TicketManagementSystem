@@ -13,6 +13,7 @@ namespace TicketManagementSystem.Controllers
     {
         public async Task <IActionResult> Index()
         {
+            //EmailHelper.SendEmail();
             var ticketList = await service.GetAllAsync();
 
             return View(ticketList);
@@ -88,15 +89,29 @@ namespace TicketManagementSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(UpdateTicketDto model)
+        public async Task<IActionResult> Edit(CreateTicketDto model)
         {
             if (!ModelState.IsValid)
-                return View(model);
+            {
+                ViewBag.Priorities = dbContext.Priorities.ToList();
+                ViewBag.Statuses = dbContext.Status.ToList();
+                ViewBag.Categories = dbContext.Categories.ToList();
+                ViewBag.Departments = dbContext.Departments.ToList();
+                ViewBag.Users = dbContext.Users.ToList();
 
-            var updated = await service.UpdateAsync(model);
+                foreach (var item in ModelState)
+                {
+                    foreach (var error in item.Value.Errors)
+                    {
+                        Console.WriteLine($"{item.Key}: {error.ErrorMessage}");
+                    }
+                }
 
-            if (updated == null)
-                return NotFound();
+                return View("Create", model);
+            }
+                
+
+            await service.UpdateAsync(model);
 
             return RedirectToAction("Index");
         }

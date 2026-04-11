@@ -9,7 +9,7 @@ namespace TicketManagementSystem.Interfaces
             Task<List<TicketListDto>> GetAllAsync();
             Task<Ticket> GetByIdAsync(int id);
         Task<Ticket> CreateAsync(CreateTicketDto model);
-        Task<Ticket> UpdateAsync(UpdateTicketDto model);
+        Task<Ticket> UpdateAsync(CreateTicketDto model);
         Task DeleteAsync(int id);
      
     }
