@@ -26,6 +26,7 @@ namespace TicketManagementSystem.Controllers
             ViewBag.Statuses = dbContext.Status.ToList();
             ViewBag.Categories = dbContext.Categories.ToList();
             ViewBag.Departments = dbContext.Departments.ToList();
+            ViewBag.Users = dbContext.Users.ToList();
             return PartialView(model);
         }
 
@@ -79,6 +80,7 @@ namespace TicketManagementSystem.Controllers
                 Department = ticket.DepartmentId,
                 CreatedByUser = ticket.CreatedByUserId,
                 CreatedDate = ticket.CreatedDate,
+                AssignedUser = ticket.AssignedToUserId
              
             };
             ViewBag.Priorities = dbContext.Priorities.ToList();

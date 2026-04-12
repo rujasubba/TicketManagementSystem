@@ -49,19 +49,21 @@
             <span asp-validation-for="Category" class="text-danger"></span>
         </div>
 
+        <div class="mb-3">
+            <label>Assigned To</label>
+            <select asp-for="AssignedUser" class="form-control">
+                <option value="">-- Select --</option>
+                @foreach (var item in ViewBag.Users)
+                {
+                    <option value="@item.Id">@item.FullName</option>
+                }
+            </select>
+            <span asp-validation-for="AssignedUser" class="text-danger"></span>
+        </div>
+
         @if (Model.Id > 0)
         {
-            <div class="mb-3">
-                <label>Assigned To</label>
-                <select asp-for="AssignedUser" class="form-control">
-                    <option value="">-- Select --</option>
-                    @foreach (var item in ViewBag.Users)
-                    {
-                        <option value="@item.Id">@item.FullName</option>
-                    }
-                </select>
-                <span asp-validation-for="AssignedUser" class="text-danger"></span>
-            </div>
+            
 
             <div class="mb-3">
                 <label>Status</label>

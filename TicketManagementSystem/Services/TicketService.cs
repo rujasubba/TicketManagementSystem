@@ -33,6 +33,35 @@ namespace TicketManagementSystem.Services
                     }
                 }
             }
+            var ticketLogList = new List<TicketLog>();
+            if(model.AssignedUser != null)
+            {
+                ticketLogList.Add(new TicketLog
+                {
+                    AssignedUserId = model.CreatedByUser,
+                    AssignedDate = DateTime.Now,
+                    IsActive = false
+
+                });
+                ticketLogList.Add(new TicketLog
+                {
+                    AssignedUserId = model.AssignedUser,
+                    AssignedDate = DateTime.Now,
+                    IsActive = true
+
+                });
+
+            }
+            else
+            {
+                ticketLogList.Add(new TicketLog
+                {
+                    AssignedUserId = model.CreatedByUser,
+                    AssignedDate = DateTime.Now,
+                    IsActive = true
+
+                });
+            }
 
             var ticket = new Ticket
             {
@@ -46,8 +75,9 @@ namespace TicketManagementSystem.Services
                 AssignedToUserId = model.AssignedUser,
                 DepartmentId = model.Department,
                 CreatedDate = DateTime.Now,
-                Comments = commentList
-                
+                Comments = commentList,
+                TicketLogs = ticketLogList
+
             };
             var ticketNo = await dbContext.Tickets.FirstOrDefaultAsync(x => x.TicketNo == ticket.TicketNo);
             if(ticketNo != null)
@@ -130,14 +160,6 @@ namespace TicketManagementSystem.Services
             }
 
 
-            ticket.Title = dto.Title;
-            ticket.Description = dto.Description;
-            ticket.PriorityId = dto.Priority;
-            ticket.CategoryId = dto.Category;
-            ticket.StatusId = dto.Status;
-            ticket.DepartmentId = dto.Department;
-            ticket.AssignedToUserId = dto.AssignedUser;
-
             if (!string.IsNullOrEmpty(dto.AssignedUser))
             {
                 var user = await dbContext.Users
@@ -182,6 +204,13 @@ namespace TicketManagementSystem.Services
                     }
                 }
             }
+            ticket.Title = dto.Title;
+            ticket.Description = dto.Description;
+            ticket.PriorityId = dto.Priority;
+            ticket.CategoryId = dto.Category;
+            ticket.StatusId = dto.Status;
+            ticket.DepartmentId = dto.Department;
+            ticket.AssignedToUserId = dto.AssignedUser;
             ticket.Comments = commentList;
 
             await dbContext.SaveChangesAsync();
