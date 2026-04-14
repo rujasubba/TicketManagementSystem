@@ -1,7 +1,5 @@
 ﻿@model TicketManagementSystem.Models.Ticket
 
-
-
 <div class="container mt-4">
     <div class="mb-4">
         <h3>@Model.TicketNo - @Model.Title</h3>
@@ -57,6 +55,43 @@
                     <p><strong>Created By:</strong> @Model.CreatedByUser?.FullName</p>
                     <p><strong>Assigned To:</strong> @Model.AssigenedUser?.FullName</p>
                     <p><strong>Created On:</strong> @Model.CreatedDate.ToString("yyyy-MM-dd hh:mm tt")</p>
+                </div>
+            </div>
+            <div class="card shadow mt-4">
+                <div class="card-header bg-light">
+                    <strong>Ticket History</strong>
+                </div>
+                <div class="card-body" style="max-height: 300px; overflow-y: auto;">
+
+                    @if (Model.TicketLogs != null && Model.TicketLogs.Any())
+                    {
+                        foreach (var log in Model.TicketLogs.OrderByDescending(x => x.AssignedDate))
+                        {
+                            <div class="mb-3 border-bottom pb-2">
+                                <div>
+                                    <small>
+                                        <strong>@log.AssignedUser?.FullName</strong>
+                                    </small>
+                                    <br />
+                                    <small class="text-muted">
+                                        @log.AssignedDate.ToString("yyyy-MM-dd hh:mm tt")
+                                    </small>
+                                </div>
+
+                                <div>
+                                    @if (log.IsActive)
+                                    {
+                                        <span class="badge bg-success">Active</span>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted">No assignment history.</p>
+                    }
+
                 </div>
             </div>
         </div>

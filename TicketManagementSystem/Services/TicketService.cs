@@ -142,6 +142,8 @@ namespace TicketManagementSystem.Services
         .Include(t => t.Comments)
         .Include(t => t.AssigenedUser)
         .Include(t => t.CreatedByUser)
+        .Include(t => t.TicketLogs)
+        .ThenInclude(tl => tl.AssignedUser)
         .FirstOrDefaultAsync(t => t.Id == id);
       
         }
@@ -152,6 +154,7 @@ namespace TicketManagementSystem.Services
   
             var ticket = await dbContext.Tickets
             .Include(t => t.Comments)
+            .Include(t => t.TicketLogs)
             .FirstOrDefaultAsync(t => t.Id == dto.Id);
 
             if (ticket == null)
@@ -204,6 +207,27 @@ namespace TicketManagementSystem.Services
                     }
                 }
             }
+
+           
+            var currentActiveLog = ticket.TicketLogs
+                .FirstOrDefault(x => x.IsActive);
+            if (dto.AssignedUser != ticket.AssignedToUserId)
+            {
+                if (currentActiveLog != null)
+                {
+                    currentActiveLog.IsActive = false;
+                }
+                if (!string.IsNullOrEmpty(dto.AssignedUser))
+                {
+                    ticket.TicketLogs.Add(new TicketLog
+                    {
+                        AssignedUserId = dto.AssignedUser,
+                        AssignedDate = DateTime.Now,
+                        IsActive = true
+                    });
+                }
+            }
+
             ticket.Title = dto.Title;
             ticket.Description = dto.Description;
             ticket.PriorityId = dto.Priority;
