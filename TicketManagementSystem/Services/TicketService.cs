@@ -123,10 +123,42 @@ namespace TicketManagementSystem.Services
                     Category = t.Category.Name,
                     Status = t.Status.Name,
                     CreatedByUserId = t.CreatedByUserId,
+                    CreatedByFullName = t.CreatedByUser.FullName,
                     AssignedToUserId = t.AssignedToUserId,
                     Department = t.Department.Name,
                     CreatedDate = t.CreatedDate
                 })
+                .ToListAsync();
+            return tickets;
+
+        }
+
+        public async Task<List<TicketListDto>> GetAllAsyncByUserId(string id)
+        {
+            var tickets = await dbContext.Tickets
+                .Include(t => t.Priority)
+                .Include(t => t.Category)
+                .Include(t => t.Status)
+                .Include(t => t.Department)
+                .Include(t => t.CreatedByUser)
+                .Include(t => t.TicketLogs)
+                 .Where(t => t.TicketLogs.Any(tl => tl.AssignedUserId == id))
+                .Select(t => new TicketListDto
+                {
+                    Id = t.Id,
+                    TicketNo = t.TicketNo,
+                    Title = t.Title,
+                    Description = t.Description,
+                    Priority = t.Priority.Name,
+                    Category = t.Category.Name,
+                    Status = t.Status.Name,
+                    CreatedByUserId = t.CreatedByUserId,
+                    CreatedByFullName = t.CreatedByUser.FullName,
+                    AssignedToUserId = t.AssignedToUserId,
+                    Department = t.Department.Name,
+                    CreatedDate = t.CreatedDate
+                })
+                
                 .ToListAsync();
             return tickets;
 
@@ -211,6 +243,7 @@ namespace TicketManagementSystem.Services
            
             var currentActiveLog = ticket.TicketLogs
                 .FirstOrDefault(x => x.IsActive);
+            
             if (dto.AssignedUser != ticket.AssignedToUserId)
             {
                 if (currentActiveLog != null)
@@ -219,6 +252,7 @@ namespace TicketManagementSystem.Services
                 }
                 if (!string.IsNullOrEmpty(dto.AssignedUser))
                 {
+
                     ticket.TicketLogs.Add(new TicketLog
                     {
                         AssignedUserId = dto.AssignedUser,

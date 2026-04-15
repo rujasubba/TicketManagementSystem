@@ -13,11 +13,13 @@ namespace TicketManagementSystem.Controllers
     {
         public async Task <IActionResult> Index()
         {
-            //EmailHelper.SendEmail();
-            var ticketList = await service.GetAllAsync();
+            
+            var ticketList = await service.GetAllAsyncByUserId(UserId);
 
             return View(ticketList);
         }
+
+       
 
         [HttpGet]
         public IActionResult Create(CreateTicketDto model)

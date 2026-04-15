@@ -23,6 +23,7 @@
             <th>Status</th>
             <th>Department</th>
             <th>Created On</th>
+            <th>CreatedBy</th>
             <th>Action</th>
       </tr>
             
@@ -40,6 +41,7 @@
                     <td>@item.Status</td>
                     <td>@item.Department</td>
                     <td>@item.CreatedDate.ToString("yyyy-MM-dd")</td>
+                    <td>@item.CreatedByFullName</td>
                    <td>
                         <a href="/Ticket/Edit/@item.Id">Edit</a>|
                     
