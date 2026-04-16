@@ -1,4 +1,7 @@
 ﻿@model List<TicketManagementSystem.DTOs.Ticket.TicketListDto>;
+@{
+    var currentUser = ViewBag.CurrentUser;
+}
 
 
 
@@ -24,6 +27,7 @@
             <th>Department</th>
             <th>Created On</th>
             <th>CreatedBy</th>
+            <th>CurrentlyAssigned</th>
             <th>Action</th>
       </tr>
             
@@ -42,14 +46,17 @@
                     <td>@item.Department</td>
                     <td>@item.CreatedDate.ToString("yyyy-MM-dd")</td>
                     <td>@item.CreatedByFullName</td>
-                   <td>
-                        <a href="/Ticket/Edit/@item.Id">Edit</a>|
-                    
-                       @*  <a href="javascript:void(0);" class="text-primary" onclick="openEditModal(@item.Id)">Edit</a>| *@
-                        <a href="javascript:void(0);" class="text-danger" onclick="openDeleteModal(@item.Id)">Delete</a>
-                        
+                    <td>@item.AssignedToFullName</td>
+                    @if (item.AssignedToUserId == currentUser)
+                    {
+                            <td>
+                                <a href="/Ticket/Edit/@item.Id">Edit</a>|
+                                <a href="javascript:void(0);" class="text-danger" onclick="openDeleteModal(@item.Id)">Delete</a>
+                            </td>
                        
-                 </td>
+                        
+                    }
+                    
                 </tr>
                 index++;
             }

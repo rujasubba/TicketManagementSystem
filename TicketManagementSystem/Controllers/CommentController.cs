@@ -1,27 +1,29 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TicketManagementSystem.DTOs.Comment;
+using TicketManagementSystem.Interfaces;
+using TicketManagementSystem.Models;
 using TicketManagementSystem.Services;
 
 namespace TicketManagementSystem.Controllers
 {
-    public class CommentController(CommentService service) : Controller
+    public class CommentController(ICommentService service) : BaseController
     {
         public IActionResult Index()
         {
             return View();
         }
+
         [HttpPost]
-        public async Task<IActionResult> AddComment(CreateCommentDto dto)
+        public async Task<IActionResult> Create(CreateCommentDto dto)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            await service.CreateAsync(dto, userId!);
-
-            return Json(new
-            {
-                success = true
-            });
+            var comment = await service.CreateAsync(dto, UserId);
+            return Ok(
+                new
+                {
+                    content = comment.Content,
+                 
+                });
         }
     }
 }

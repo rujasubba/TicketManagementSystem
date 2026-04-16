@@ -10,20 +10,28 @@ namespace TicketManagementSystem.Services
     {
         public async Task<CreateCommentDto> CreateAsync(CreateCommentDto model, string userId)
         {
+            
             var ticket = await dbContext.Tickets
+                .Include(t => t.TicketLogs)
             .FirstOrDefaultAsync(x => x.Id == model.TicketId);
             if (ticket == null)
             {
                 throw new Exception("Ticket not found");
             }
+            var isUserinvolved = ticket.TicketLogs.Any(tl => tl.AssignedUserId == userId);
+            if (!isUserinvolved)
+            {
+                throw new Exception("User cannot comment on this ticket");
+            }
             var comment = new Comment
             {
                 Content = model.Content,
                 CreatedByUserId = userId,
+               
                 CreatedDate = DateTime.Now,
                 TicketId = model.TicketId
             };
-            dbContext.Comments.Add(comment);
+           await  dbContext.Comments.AddAsync(comment);
             await dbContext.SaveChangesAsync();
             return model;
         }

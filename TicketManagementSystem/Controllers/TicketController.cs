@@ -13,7 +13,7 @@ namespace TicketManagementSystem.Controllers
     {
         public async Task <IActionResult> Index()
         {
-            
+            ViewBag.CurrentUser = UserId;
             var ticketList = await service.GetAllAsyncByUserId(UserId);
 
             return View(ticketList);
@@ -122,6 +122,8 @@ namespace TicketManagementSystem.Controllers
 
             return RedirectToAction("Index");
         }
+
+       
 
         [HttpGet]
         public async Task<IActionResult> Delete(int id)

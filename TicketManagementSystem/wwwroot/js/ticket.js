@@ -78,14 +78,21 @@ $(document).ready(function () {
 
     $(document).ready(function () {
         $('#addCommentBtn').on('click', function () {
+            debugger
+
             var content = $('#newCommentContent').val().trim();
             if (!content) {
                 alert("Please enter a comment.");
                 return;
             }
-            var ticketId = $('#commentsSection').data('ticket-id');
+            var ticketId = $("#commentsSection").attr("ticket-id");
+            console.log(ticketId);
 
-            $.post('/Comment/Create', { TicketId: ticketId, Content: content })
+            var data = {
+                TicketId: ticketId, Content: content
+            };
+
+            $.post('/Comment/Create', data)
                 .done(function (html) {
                     $('#commentsSection').append(html);
                     $('#newCommentContent').val('');
@@ -98,104 +105,4 @@ $(document).ready(function () {
     });
 
 });
-//$(document).on("click", "#addCommentBtn", function () {
-//    debugger
 
-//    const dto = {
-//        ticketId: $("#ticketId").val(),
-//        content: $("#newCommentContent").val().trim()
-//    };
-
-//    if (dto.content === "") {
-//        alert("Please enter a comment.");
-//        return;
-//    }
-
-//    $.ajax({
-//        url: "/Comment/AddComment",
-//        type: "POST",
-//        data: dto,
-//        success: function (response) {
-
-//            if (response.success) {
-
-//                $("#newCommentContent").val("");
-
-//                // optionally add comment immediately to UI
-//                $("#commentsSection").prepend(`
-//                    <div class="mb-3 border-bottom pb-2">
-//                        <div>
-//                            <small class="text-muted">Just now</small>
-//                        </div>
-//                        <div>${dto.content}</div>
-//                    </div>
-//                `);
-//            }
-//            else {
-//                alert(response.message);
-//            }
-//        },
-//        error: function () {
-//            alert("Unable to add comment.");
-//        }
-//    });
-//});
-
-//$(document).ready(function () {
-
-//    $("#addCommentBtn").click(function () {
-
-//        const content = $("#newCommentContent").val().trim();
-//        const ticketId = $("#ticketId").val();
-
-//        if (content === "") {
-//            alert("Please enter a comment");
-//            return;
-//        }
-
-//        $.ajax({
-//            url: "/Ticket/AddComment",
-//            type: "POST",
-//            data: {
-//                ticketId: ticketId,
-//                content: content
-//            },
-//            success: function (response) {
-
-//                if (response.success) {
-
-//                    // remove "No comments yet."
-//                    $("#commentsSection p.text-muted").remove();
-
-//                    const newCommentHtml = `
-//                        <div class="mb-3 border-bottom pb-2" data-id="${response.id}">
-//                            <div class="d-flex justify-content-between">
-//                                <div>
-//                                    <strong>${response.createdBy}</strong><br />
-//                                    <small class="text-muted">${response.createdDate}</small>
-//                                </div>
-//                            </div>
-
-//                            <div class="mt-2">${response.content}</div>
-
-//                            <div class="mt-1">
-//                                <a href="javascript:void(0);" class="text-primary small edit-comment">Edit</a> |
-//                                <a href="javascript:void(0);" class="text-danger small delete-comment">Delete</a>
-//                            </div>
-//                        </div>
-//                    `;
-
-//                    // prepend = show newest comment at top
-//                    $("#commentsSection").prepend(newCommentHtml);
-
-//                    // clear textbox
-//                    $("#newCommentContent").val("");
-//                }
-//            },
-//            error: function () {
-//                alert("Failed to add comment");
-//            }
-//        });
-//    });
-
-//});

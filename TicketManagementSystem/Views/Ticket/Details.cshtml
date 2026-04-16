@@ -11,7 +11,7 @@
                 <div class="card-header bg-light">
                     <strong>Activity</strong>
                 </div>
-                <div class="card-body" id="commentsSection" style="max-height: 500px; overflow-y: auto;">
+                <div class="card-body" id="commentsSection" ticket-id="@Model.Id" style="max-height: 500px; overflow-y: auto;">
 
                     @if (Model.Comments != null && Model.Comments.Any())
                     {
@@ -23,10 +23,10 @@
                                     <small class="text-muted">@comment.CreatedDate.ToString("yyyy-MM-dd hh:mm tt")</small>
                                 </div>
                                 <div>@comment.Content</div>
-                                <div class="mt-1">
+                                @* <div class="mt-1">
                                     <a href="javascript:void(0);" class="text-primary small">Edit</a> |
                                     <a href="javascript:void(0);" class="text-danger small">Delete</a>
-                                </div>
+                                </div> *@
                             </div>
                         }
                     }

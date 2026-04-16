@@ -155,6 +155,7 @@ namespace TicketManagementSystem.Services
                     CreatedByUserId = t.CreatedByUserId,
                     CreatedByFullName = t.CreatedByUser.FullName,
                     AssignedToUserId = t.AssignedToUserId,
+                    AssignedToFullName = t.AssigenedUser.FullName,
                     Department = t.Department.Name,
                     CreatedDate = t.CreatedDate
                 })
@@ -193,7 +194,42 @@ namespace TicketManagementSystem.Services
             {
                 throw new Exception("Ticket not found");
             }
+            var currentUserId = dto.CreatedByUser;
 
+            var currentActiveLog = ticket.TicketLogs
+               .FirstOrDefault(x => x.IsActive);
+
+            bool isCurrentAssignedUser = currentActiveLog?.AssignedUserId == currentUserId;
+            bool isUserInTicket = ticket.TicketLogs
+              .Any(tl => tl.AssignedUserId == currentUserId);
+
+            if (!isUserInTicket)
+            {
+                throw new Exception("You are not allowed to update this ticket.");
+            }
+            if (dto.AssignedUser != ticket.AssignedToUserId)
+            {
+                if (!isCurrentAssignedUser)
+                {
+                    throw new Exception("Only assigned user can reassign this ticket.");
+                }
+
+                if (currentActiveLog != null)
+                {
+                    currentActiveLog.IsActive = false;
+                }
+                if (!string.IsNullOrEmpty(dto.AssignedUser))
+                {
+
+                    ticket.TicketLogs.Add(new TicketLog
+                    {
+                        AssignedUserId = dto.AssignedUser,
+                        AssignedDate = DateTime.Now,
+                        IsActive = true
+                    });
+                }
+            }
+           
 
             if (!string.IsNullOrEmpty(dto.AssignedUser))
             {
@@ -237,28 +273,6 @@ namespace TicketManagementSystem.Services
                             CreatedDate = DateTime.Now
                         });
                     }
-                }
-            }
-
-           
-            var currentActiveLog = ticket.TicketLogs
-                .FirstOrDefault(x => x.IsActive);
-            
-            if (dto.AssignedUser != ticket.AssignedToUserId)
-            {
-                if (currentActiveLog != null)
-                {
-                    currentActiveLog.IsActive = false;
-                }
-                if (!string.IsNullOrEmpty(dto.AssignedUser))
-                {
-
-                    ticket.TicketLogs.Add(new TicketLog
-                    {
-                        AssignedUserId = dto.AssignedUser,
-                        AssignedDate = DateTime.Now,
-                        IsActive = true
-                    });
                 }
             }
 

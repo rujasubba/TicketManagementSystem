@@ -15,6 +15,7 @@ namespace TicketManagementSystem.DTOs.Ticket
         public string CreatedByUserName { get; set; }
         public string CreatedByFullName { get; set; }
         public string? AssignedToUserId { get; set; }
+        public string AssignedToFullName { get; set; }
         public string Department { get; set; }
         public DateTime CreatedDate { get; set; }
        
