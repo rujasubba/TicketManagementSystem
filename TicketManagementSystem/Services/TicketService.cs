@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TicketManagementSystem.DTOs.Comment;
 using TicketManagementSystem.DTOs.Ticket;
 using TicketManagementSystem.Interfaces;
@@ -161,6 +162,39 @@ namespace TicketManagementSystem.Services
                 })
                 
                 .ToListAsync();
+            return tickets;
+
+        }
+
+        public async Task <List<TicketListDto>> GetAllByStatusId(int id, string userId)
+        {
+            var tickets = await dbContext.Tickets
+                 .Include(t => t.Priority)
+                 .Include(t => t.Category)
+                 .Include(t => t.Status)
+                 .Include(t => t.Department)
+                 .Include(t => t.CreatedByUser)
+                 .Include(t => t.TicketLogs)
+                  .Where(t => t.StatusId == id &&
+                              t.TicketLogs.Any(tl => tl.AssignedUserId == userId))
+                 .Select(t => new TicketListDto
+                 {
+                     Id = t.Id,
+                     TicketNo = t.TicketNo,
+                     Title = t.Title,
+                     Description = t.Description,
+                     Priority = t.Priority.Name,
+                     Category = t.Category.Name,
+                     Status = t.Status.Name,
+                     CreatedByUserId = t.CreatedByUserId,
+                     CreatedByFullName = t.CreatedByUser.FullName,
+                     AssignedToUserId = t.AssignedToUserId,
+                     AssignedToFullName = t.AssigenedUser.FullName,
+                     Department = t.Department.Name,
+                     CreatedDate = t.CreatedDate
+                 })
+
+                 .ToListAsync();
             return tickets;
 
         }

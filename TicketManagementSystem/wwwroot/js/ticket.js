@@ -104,5 +104,10 @@ $(document).ready(function () {
 
     });
 
+    //$(document).on('click', '.ticket-status', function (e) {
+    //    e.preventDefault();
+    //    $.get('/Home/GetTicketByStatusId' + id)
+    //}
+
 });
 

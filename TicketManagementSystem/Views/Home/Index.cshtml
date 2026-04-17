@@ -1,9 +1,10 @@
 ﻿@model List<TicketManagementSystem.DTOs.Ticket.TicketListDto>;
 @{
     ViewData["Title"] = "Dashboard";
-    var openTickets = Model.Count(t => t.Status == "Open");
-    var inProgressTickets = Model.Count(t => t.Status == "In Progress");
-    var resolvedTickets = Model.Count(t => t.Status == "Closed");
+    var total = Model.Count();
+    var open = Model.Count(t => t.Status == "Open");
+    var inProgress = Model.Count(t => t.Status == "In Progress");
+    var closed = Model.Count(t => t.Status == "Closed");
 }
 
 <div class="container-fluid mt-4">
@@ -11,39 +12,47 @@
     <div class="row">
 
         <div class="col-md-3">
+            <a href="/Home/GetTicketByStatusId?id=1" style="text-decoration: none;">
             <div class="card text-white bg-primary mb-3">
-                <div class="card-body">
+                <div class="card-body" >
                     <h5 class="card-title">Open Tickets</h5>
-                    <h2>@openTickets</h2>
+                    <h2>@open</h2>
                 </div>
             </div>
+            </a>
         </div>
 
         <div class="col-md-3">
+            <a href="/Home/GetTicketByStatusId?id=3" style="text-decoration: none;">
             <div class="card text-white bg-warning mb-3">
                 <div class="card-body">
                     <h5 class="card-title">In Progress</h5>
-                    <h2>@inProgressTickets</h2>
+                    <h2>@inProgress</h2>
                 </div>
             </div>
+            </a>
         </div>
 
         <div class="col-md-3">
+            <a href="/Home/GetTicketByStatusId?id=2" style="text-decoration: none;">
             <div class="card text-white bg-success mb-3">
                 <div class="card-body">
-                    <h5 class="card-title">Resolved</h5>
-                    <h2>@resolvedTickets</h2>
+                    <h5 class="card-title">Closed</h5>
+                    <h2>@closed</h2>
                 </div>
             </div>
+            </a>
         </div>
 
         <div class="col-md-3">
+            <a href="/Ticket/Index" style="text-decoration: none;">
             <div class="card text-white bg-danger mb-3">
                 <div class="card-body">
-                    <h5 class="card-title">Overdue</h5>
-                    <h2>5</h2>
+                    <h5 class="card-title">Total</h5>
+                    <h2>@total</h2>
                 </div>
             </div>
+            </a>
         </div>
 
     </div>
@@ -139,34 +148,3 @@
     <script src="~/js/ticket.js"></script>
 }
 
-@* <script>
-
-    const statusChart = new Chart(
-        document.getElementById('statusChart'),
-        {
-            type: 'doughnut',
-            data: {
-                labels: ['Open', 'In Progress', 'Resolved'],
-                datasets: [{
-                    data: [28, 14, 52]
-                }]
-            }
-        }
-    );
-
-
-    const priorityChart = new Chart(
-        document.getElementById('priorityChart'),
-        {
-            type: 'bar',
-            data: {
-                labels: ['Low', 'Medium', 'High'],
-                datasets: [{
-                    label: 'Tickets',
-                    data: [12, 24, 18]
-                }]
-            }
-        }
-    );
-
-</script> *@

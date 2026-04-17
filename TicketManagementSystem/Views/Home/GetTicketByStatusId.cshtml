@@ -1,0 +1,88 @@
+﻿@model List<TicketManagementSystem.DTOs.Ticket.TicketListDto>;
+@{
+    var currentUser = ViewBag.CurrentUser;
+}
+
+
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>This is the list of all tickets</h1>
+    
+</div>
+
+<div class="row">
+    @{
+        var index = 1;
+    }
+    <table class="table">
+        <thead>
+            <tr>
+                <th>S.N</th>
+                <th>Ticket No</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Priority</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Department</th>
+                <th>Created On</th>
+                <th>CreatedBy</th>
+                <th>CurrentlyAssigned</th>
+                <th>Action</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr id="ticketRow-@item.Id" style="cursor:pointer;">
+                    <td>@index</td>
+                    <td>@item.TicketNo</td>
+                    <td>@item.Title</td>
+                    <td>@item.Description</td>
+                    <td>@item.Priority</td>
+                    <td>@item.Category</td>
+                    <td>@item.Status</td>
+                    <td>@item.Department</td>
+                    <td>@item.CreatedDate.ToString("yyyy-MM-dd")</td>
+                    <td>@item.CreatedByFullName</td>
+                    <td>@item.AssignedToFullName</td>
+                    @if (item.AssignedToUserId == currentUser)
+                    {
+                        <td>
+                            <a href="/Ticket/Edit/@item.Id">Edit</a>|
+                            <a href="javascript:void(0);" class="text-danger" onclick="openDeleteModal(@item.Id)">Delete</a>
+                        </td>
+
+
+                    }
+
+                </tr>
+                index++;
+            }
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="deleteModalContent">
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="createTicketModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="createTicketModalContent"></div>
+    </div>
+</div>
+<div class="modal fade" id="editTicketModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="editTicketModalContent"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/ticket.js" asp-append-version="true"></script>
+    
+}
+
