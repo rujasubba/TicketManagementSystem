@@ -166,6 +166,82 @@ namespace TicketManagementSystem.Services
 
         }
 
+        public async Task<List<TicketListDto>> GetRecentAsyncByUserId(string id)
+        {
+            var today = DateTime.Now.Date;
+            var sevenDaysBefore = today.AddDays(-7);
+
+            
+                var tickets = await dbContext.Tickets
+                .Include(t => t.Priority)
+                .Include(t => t.Category)
+                .Include(t => t.Status)
+                .Include(t => t.Department)
+                .Include(t => t.CreatedByUser)
+                .Include(t => t.TicketLogs)
+                 .Where(t => t.TicketLogs.Any(tl => tl.AssignedUserId == id) && t.CreatedDate >= sevenDaysBefore)
+                .Select(t => new TicketListDto
+                {
+                    Id = t.Id,
+                    TicketNo = t.TicketNo,
+                    Title = t.Title,
+                    Description = t.Description,
+                    Priority = t.Priority.Name,
+                    Category = t.Category.Name,
+                    Status = t.Status.Name,
+                    CreatedByUserId = t.CreatedByUserId,
+                    CreatedByFullName = t.CreatedByUser.FullName,
+                    AssignedToUserId = t.AssignedToUserId,
+                    AssignedToFullName = t.AssigenedUser.FullName,
+                    Department = t.Department.Name,
+                    CreatedDate = t.CreatedDate
+                })
+                .OrderByDescending(x => x.CreatedDate)
+
+                .ToListAsync();
+            return tickets;
+
+        }
+
+
+        public async Task<List<TicketListDto>> GetRecentAsyncByPriority(string id)
+        {
+            var today = DateTime.Now.Date;
+            var sevenDaysBefore = today.AddDays(-7);
+
+
+            var tickets = await dbContext.Tickets
+            .Include(t => t.Priority)
+            .Include(t => t.Category)
+            .Include(t => t.Status)
+            .Include(t => t.Department)
+            .Include(t => t.CreatedByUser)
+            .Include(t => t.TicketLogs)
+             .Where(t => t.TicketLogs.Any(tl => tl.AssignedUserId == id) && t.CreatedDate >= sevenDaysBefore)
+            .Select(t => new TicketListDto
+            {
+                Id = t.Id,
+                TicketNo = t.TicketNo,
+                Title = t.Title,
+                Description = t.Description,
+                PriorityId = t.PriorityId,
+                Priority = t.Priority.Name,
+                Category = t.Category.Name,
+                Status = t.Status.Name,
+                CreatedByUserId = t.CreatedByUserId,
+                CreatedByFullName = t.CreatedByUser.FullName,
+                AssignedToUserId = t.AssignedToUserId,
+                AssignedToFullName = t.AssigenedUser.FullName,
+                Department = t.Department.Name,
+                CreatedDate = t.CreatedDate
+            })
+            .OrderByDescending(x => x.PriorityId)
+            .ThenBy(x => x.CreatedDate)
+            .ToListAsync();
+            return tickets;
+
+        }
+
         public async Task <List<TicketListDto>> GetAllByStatusId(int id, string userId)
         {
             var tickets = await dbContext.Tickets

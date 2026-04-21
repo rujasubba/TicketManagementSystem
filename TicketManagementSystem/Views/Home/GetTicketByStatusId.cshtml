@@ -46,15 +46,27 @@
                     <td>@item.Department</td>
                     <td>@item.CreatedDate.ToString("yyyy-MM-dd")</td>
                     <td>@item.CreatedByFullName</td>
-                    <td>@item.AssignedToFullName</td>
-                    @if (item.AssignedToUserId == currentUser)
+                    <td>
+                        
+                        @if (string.IsNullOrEmpty(item.AssignedToFullName))
+                        {
+                            <span class="text-muted">Unassigned</span>
+                        }
+                        else
+                        {
+                            @item.AssignedToFullName
+                        }
+                    </td>
+                    @if (item.AssignedToUserId == currentUser || item.CreatedByUserId == currentUser)
                     {
                         <td>
                             <a href="/Ticket/Edit/@item.Id">Edit</a>|
                             <a href="javascript:void(0);" class="text-danger" onclick="openDeleteModal(@item.Id)">Delete</a>
                         </td>
-
-
+                    }
+                    else
+                    {
+                        <td><i>No Edit/Delet Access</i></td>
                     }
 
                 </tr>

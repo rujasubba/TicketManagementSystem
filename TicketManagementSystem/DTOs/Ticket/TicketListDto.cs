@@ -8,6 +8,7 @@ namespace TicketManagementSystem.DTOs.Ticket
         public string TicketNo { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public int PriorityId { get; set; }
         public string Priority{ get; set; }
         public string Category { get; set; }
         public string Status { get; set; }

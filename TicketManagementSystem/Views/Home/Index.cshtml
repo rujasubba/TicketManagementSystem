@@ -1,10 +1,13 @@
 ﻿@model List<TicketManagementSystem.DTOs.Ticket.TicketListDto>;
+
+
 @{
     ViewData["Title"] = "Dashboard";
     var total = Model.Count();
     var open = Model.Count(t => t.Status == "Open");
     var inProgress = Model.Count(t => t.Status == "In Progress");
     var closed = Model.Count(t => t.Status == "Closed");
+    var recentRequests = ViewBag.RecentRequests;
 }
 
 <div class="container-fluid mt-4">
@@ -24,7 +27,7 @@
 
         <div class="col-md-3">
             <a href="/Home/GetTicketByStatusId?id=3" style="text-decoration: none;">
-            <div class="card text-white bg-warning mb-3">
+            <div class="card text-white bg-success mb-3">
                 <div class="card-body">
                     <h5 class="card-title">In Progress</h5>
                     <h2>@inProgress</h2>
@@ -35,7 +38,7 @@
 
         <div class="col-md-3">
             <a href="/Home/GetTicketByStatusId?id=2" style="text-decoration: none;">
-            <div class="card text-white bg-success mb-3">
+            <div class="card text-white bg-warning mb-3">
                 <div class="card-body">
                     <h5 class="card-title">Closed</h5>
                     <h2>@closed</h2>
@@ -58,17 +61,81 @@
     </div>
     <div class="row mt-4">
 
-        <div class="col-md-6">
+        <div class="col-md-3">
             <div class="card p-3">
                 <h5>Tickets by Status</h5>
                 <canvas id="statusChart"></canvas>
             </div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-8">
             <div class="card p-3">
                 <h5>Tickets by Priority</h5>
-                <canvas id="priorityChart"></canvas>
+                <table class="table table-bordered table-hover mt-3">
+                    <thead class="table-light">
+                        <tr>
+                            <th>S.N</th>
+                            <th>Ticket No</th>
+                            <th>Title</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @{
+                            var priorityList = ViewBag.TicketsByPriority;
+                            var i = 1;
+                        }
+
+                        @foreach (var ticket in priorityList)
+                        {
+                            <tr>
+                                <td>@i</td>
+                                <td>@ticket.TicketNo</td>
+                                <td>@ticket.Title</td>
+
+                               
+                                <td>
+                                    @if (ticket.Priority == "High")
+                                    {
+                                        <span class="badge bg-danger">High</span>
+                                    }
+                                    else if (ticket.Priority == "Medium")
+                                    {
+                                        <span class="badge bg-warning text-dark">Medium</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">Low</span>
+                                    }
+                                </td>
+
+                         
+                                <td>
+                                    @if (ticket.Status == "Open")
+                                    {
+                                        <span class="badge bg-primary">Open</span>
+                                    }
+                                    else if (ticket.Status == "Closed")
+                                    {
+                                        <span class="badge bg-secondary">Closed</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success text-dark">In Progress</span>
+                                    }
+                                </td>
+
+                                <td>@ticket.CreatedDate</td>
+                            </tr>
+
+                            i++;
+                        }
+                    </tbody>
+                </table>
+               @*  <canvas id="priorityChart"></canvas> *@
             </div>
         </div>
 
@@ -81,52 +148,76 @@
         </div>
 
         <div class="card-body">
-
+            <div class="row">
+            @{
+                var index = 1;
+            }
             <table class="table table-bordered table-hover">
 
                 <thead class="table-light">
                     <tr>
-                        <th>Ticket ID</th>
-                        <th>Subject</th>
+
+                        <th>S.N</th>
+                        <th>Ticket No</th>
+                        <th>Title</th>
                         <th>Status</th>
                         <th>Priority</th>
                         <th>Assigned To</th>
                         <th>Created</th>
+                        <th>CreatedOn</th>
+
                     </tr>
                 </thead>
-
+             
                 <tbody>
+                    @foreach (var request in recentRequests)
+                    {
+                        <tr>
+                            <td>@index</td>
+                            <td>@request.TicketNo</td>
+                            <td>@request.Title</td>
+                             <td>
+                                @if(request.Status == "Open")
+                                {
+                                    <span class="badge bg-primary">@request.Status</span>
+                                }
+                                else if(request.Status == "Closed")
+                                {
+                                    <span class="badge bg-secondary">@request.Status</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">@request.Status</span>
+                                }
+                                </td>
+                                <td>
+                                    @if (request.Priority == "High")
+                                    {
+                                        <span class="badge bg-danger">@request.Priority</span>
+                                    }
+                                    else if (request.Priority == "Medium")
+                                    {
+                                        <span class="badge bg-warning">@request.Priority</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-primary">@request.Priority</span>
+                                    }
 
-                    <tr>
-                        <td>#1021</td>
-                        <td>Login not working</td>
-                        <td><span class="badge bg-warning">In Progress</span></td>
-                        <td><span class="badge bg-danger">High</span></td>
-                        <td>John</td>
-                        <td>15 Mar</td>
-                    </tr>
-
-                    <tr>
-                        <td>#1020</td>
-                        <td>Email issue</td>
-                        <td><span class="badge bg-primary">Open</span></td>
-                        <td><span class="badge bg-warning">Medium</span></td>
-                        <td>Sarah</td>
-                        <td>14 Mar</td>
-                    </tr>
-
-                    <tr>
-                        <td>#1019</td>
-                        <td>Printer not working</td>
-                        <td><span class="badge bg-success">Resolved</span></td>
-                        <td><span class="badge bg-secondary">Low</span></td>
-                        <td>Mike</td>
-                        <td>13 Mar</td>
-                    </tr>
+                                    
+                                </td>
+                            <td>@request.AssignedToFullName</td>
+                            <td>@request.CreatedByFullName</td>
+                            <td>@request.CreatedDate</td>
+                        </tr>
+                            index++;
+                        }
+                    
 
                 </tbody>
 
             </table>
+
 
             <div class="modal fade" id="createTicketModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
@@ -136,6 +227,7 @@
                 </div>
             </div>
 
+        </div>
         </div>
 
     </div>
