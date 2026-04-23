@@ -121,6 +121,17 @@ function loadStatusChart() {
     });
 }
 
+function removeAttachment(fileId, btn) {
+    // Enable the hidden input so the ID gets submitted
+    const hiddenInput = document.getElementById('remove_' + fileId);
+    hiddenInput.disabled = false;
+
+    // Strike through the item visually
+    btn.closest('li').classList.add('text-muted');
+    btn.closest('li').querySelector('a').style.textDecoration = 'line-through';
+    btn.disabled = true;
+}
+
 
 
 

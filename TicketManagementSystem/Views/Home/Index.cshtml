@@ -93,7 +93,12 @@
                         {
                             <tr>
                                 <td>@i</td>
-                                <td>@ticket.TicketNo</td>
+                                
+                                <td>
+                                    <a href="/Ticket/Details/@ticket.Id" style="text-decoration: none;">
+                                    @ticket.TicketNo
+                                    </a>
+                                </td>
                                 <td>@ticket.Title</td>
 
                                
@@ -174,7 +179,12 @@
                     {
                         <tr>
                             <td>@index</td>
-                            <td>@request.TicketNo</td>
+                            <td>
+                                    <a href="/Ticket/Details/@request.Id" style="text-decoration: none;">
+                                        @request.TicketNo
+                                    </a>
+                            </td>
+                                
                             <td>@request.Title</td>
                              <td>
                                 @if(request.Status == "Open")

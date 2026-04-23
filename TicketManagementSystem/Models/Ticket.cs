@@ -21,6 +21,7 @@
         public DateTime CreatedDate { get; set; }
         public IEnumerable<Comment> Comments { get; set; }
         public List<TicketLog> TicketLogs { get; set; }
+        public List<Attachment> Attachments { get; set; }
 
     }
 }

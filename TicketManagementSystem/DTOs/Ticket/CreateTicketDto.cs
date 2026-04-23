@@ -22,5 +22,15 @@ namespace TicketManagementSystem.DTOs.Ticket
         public DateTime CreatedDate { get; set; }
         public List<string> CommentContents { get; set; } = new();
 
+        public List<IFormFile>? Attachments { get; set; }
+        public List<ExistingAttachmentDto>? ExistingAttachments { get; set; }
+        public List<int>? RemovedAttachmentIds { get; set; }
+
+    }
+    public class ExistingAttachmentDto
+    {
+        public int Id { get; set; }
+        public string AttachmentName { get; set; }
+        public string AttachmentPath { get; set; }
     }
 }

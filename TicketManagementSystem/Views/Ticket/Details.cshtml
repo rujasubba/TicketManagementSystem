@@ -57,6 +57,35 @@
                     <p><strong>Created On:</strong> @Model.CreatedDate.ToString("yyyy-MM-dd hh:mm tt")</p>
                 </div>
             </div>
+
+            <div class="card shadow mt-4">
+                <div class="card-header bg-light">
+                    <strong>Attachments</strong>
+                </div>
+                <div class="card-body">
+                    @if (Model.Attachments != null && Model.Attachments.Any())
+                    {
+                        <ul class="list-group">
+                            @foreach (var attachment in Model.Attachments)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span class="text-truncate me-2">@attachment.AttachmentName</span>
+                                    <a href="/@attachment.AttachmentPath"
+                                       target="_blank"
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-download"></i> Download
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No attachments.</p>
+                    }
+                </div>
+            </div>
+
             <div class="card shadow mt-4">
                 <div class="card-header bg-light">
                     <strong>Ticket History</strong>

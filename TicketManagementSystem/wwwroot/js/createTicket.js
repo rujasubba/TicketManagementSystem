@@ -16,50 +16,17 @@ $(document).on("click", "#addCommentBtn", function () {
 });
 
 
-//$(document).on("click", "#addCommentBtn", function () {
-//    debugger
-//    const newCommentContent = $(`
-//        <div class=" comment-box mb-3 border-bottom pb-2">
-//           <textarea class="form-control mb-2" id="newCommentContent" rows="3" placeholder="Enter your comment here..."></textarea>
-//        </div>
-//    `);
-   
 
-//    const dto = {
-//        ticketId: $("#ticketId").val(),
-//        content: $("#newCommentContent").val()
-//    };
+$(document).on("click", ".remove-attachment-btn", function () {
+    debugger
+    var $btn = $(this);
+    var $listItem = $btn.closest("li");
 
-//    if (dto.content === "") {
-//        alert("Please enter a comment.");
-//        return;
-//    }
+    // Enable the hidden input so the ID is submitted with the form
+    $listItem.find(".remove-attachment-input").prop("disabled", false);
 
-//    $.ajax({
-//        url: "/Comment/CreateAsync",
-//        type: "POST",
-//        data: dto,
-//        success: function (response) {
-
-//            if (response.success) {
-//                $("#newCommentContent").val("");
-//                $("#commentsContainer").Append(`
-//                    <div class="mb-3 border-bottom pb-2">
-//                       <div><strong>${response.createdBy}</strong> <small class="text-muted>${response.createdDate}</small></div>
-//                          <div>${response.content}</div>
-//                   </div>
-
-//                `); 
-
-               
-//            }
-//            else {
-//                alert(response.message);
-//            }
-//        },
-//        error: function () {
-//            alert("Unable to add comment.");
-//        }
-//    });
-//});
-
+    // Visual feedback
+    $listItem.find("a").css("text-decoration", "line-through");
+    $listItem.addClass("text-muted");
+    $btn.prop("disabled", true).text("Removed");
+});

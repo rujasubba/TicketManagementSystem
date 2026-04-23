@@ -44,6 +44,7 @@ namespace TicketManagementSystem.Controllers
 
             var createdTicket = await service.CreateAsync(model);
 
+
             if (createdTicket == null)
             {
                 ModelState.AddModelError("", "Failed to create ticket");
@@ -82,9 +83,15 @@ namespace TicketManagementSystem.Controllers
                 Department = ticket.DepartmentId,
                 CreatedByUser = ticket.CreatedByUserId,
                 CreatedDate = ticket.CreatedDate,
-                AssignedUser = ticket.AssignedToUserId
-             
+                AssignedUser = ticket.AssignedToUserId,
+                ExistingAttachments = ticket.Attachments?.Select(a => new ExistingAttachmentDto
+                {
+                    Id = a.Id,
+                    AttachmentName = a.AttachmentName,
+                    AttachmentPath = a.AttachmentPath
+                }).ToList()
             };
+
             ViewBag.Priorities = dbContext.Priorities.ToList();
             ViewBag.Statuses = dbContext.Status.ToList();
             ViewBag.Categories = dbContext.Categories.ToList();

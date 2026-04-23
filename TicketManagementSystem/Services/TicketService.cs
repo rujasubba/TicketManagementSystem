@@ -1,22 +1,43 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TicketManagementSystem.DTOs.Comment;
 using TicketManagementSystem.DTOs.Ticket;
 using TicketManagementSystem.Interfaces;
 using TicketManagementSystem.Models;
 using TicketManagementSystem.Persistent;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace TicketManagementSystem.Services
 {
-    public class TicketService(AppDbContext dbContext) : ITicketService
+    public class TicketService(AppDbContext dbContext, IAttachmentService attachmentService) : ITicketService
     {
-        
+
         public async Task<Ticket> CreateAsync(CreateTicketDto model)
         {
+            
+
             if (model == null)
             {
                 throw new Exception("Model cannot be null");
             }
+
+            var attachmentList = new List<Attachment>();
+
+            if (model.Attachments != null && model.Attachments.Any())
+            {
+                foreach (var file in model.Attachments)
+                {
+                    var uploadedFile = await attachmentService.UploadFileAsync(file);
+
+                    attachmentList.Add(new Attachment
+                    {
+                        AttachmentName = uploadedFile.FileName,
+                        AttachmentPath = uploadedFile.FilePath
+                    });
+                }
+            }
+
             var commentList = new List<Comment>();
 
             if (model.CommentContents != null && model.CommentContents.Any())
@@ -77,7 +98,8 @@ namespace TicketManagementSystem.Services
                 DepartmentId = model.Department,
                 CreatedDate = DateTime.Now,
                 Comments = commentList,
-                TicketLogs = ticketLogList
+                TicketLogs = ticketLogList,
+                Attachments = attachmentList
 
             };
             var ticketNo = await dbContext.Tickets.FirstOrDefaultAsync(x => x.TicketNo == ticket.TicketNo);
@@ -285,6 +307,7 @@ namespace TicketManagementSystem.Services
         .Include(t => t.Comments)
         .Include(t => t.AssigenedUser)
         .Include(t => t.CreatedByUser)
+        .Include(t => t.Attachments)
         .Include(t => t.TicketLogs)
         .ThenInclude(tl => tl.AssignedUser)
         .FirstOrDefaultAsync(t => t.Id == id);
@@ -298,6 +321,7 @@ namespace TicketManagementSystem.Services
             var ticket = await dbContext.Tickets
             .Include(t => t.Comments)
             .Include(t => t.TicketLogs)
+            .Include(t => t.Attachments)
             .FirstOrDefaultAsync(t => t.Id == dto.Id);
 
             if (ticket == null)
@@ -366,7 +390,29 @@ namespace TicketManagementSystem.Services
                     EmailHelper.SendEmail(user.Email, subject, body);
                 }
             }
+            var attachmentList = ticket.Attachments.ToList();
+            if (dto.RemovedAttachmentIds != null && dto.RemovedAttachmentIds.Any())
+            {
+                var toRemove = ticket.Attachments
+                    .Where(a => dto.RemovedAttachmentIds.Contains(a.Id))
+                    .ToList();
 
+                dbContext.Attachments.RemoveRange(toRemove);
+            }
+
+            if (dto.Attachments != null && dto.Attachments.Any())
+            {
+                foreach (var file in dto.Attachments)
+                {
+                    var uploadedFile = await attachmentService.UploadFileAsync(file);
+
+                    attachmentList.Add(new Attachment
+                    {
+                        AttachmentName = uploadedFile.FileName,
+                        AttachmentPath = uploadedFile.FilePath
+                    });
+                }
+            }
 
 
             var commentList = ticket.Comments.ToList();
@@ -394,6 +440,7 @@ namespace TicketManagementSystem.Services
             ticket.DepartmentId = dto.Department;
             ticket.AssignedToUserId = dto.AssignedUser;
             ticket.Comments = commentList;
+            ticket.Attachments = attachmentList;
 
             await dbContext.SaveChangesAsync();
 

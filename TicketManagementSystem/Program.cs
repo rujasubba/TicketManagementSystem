@@ -45,6 +45,7 @@ builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<IcategoryService, CategoryService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IAttachmentService, AttachmentService>();
 
 var app = builder.Build();
 

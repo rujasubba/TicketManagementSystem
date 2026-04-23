@@ -17,6 +17,7 @@ namespace TicketManagementSystem.Persistent
         public DbSet<Priority> Priorities { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<TicketLog> TicketLogs { get; set; }
+        public DbSet<Attachment> Attachments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -81,7 +82,11 @@ namespace TicketManagementSystem.Persistent
               .HasForeignKey(t => t.TicketId)
               .OnDelete(DeleteBehavior.Restrict);
 
-
+            modelBuilder.Entity<Attachment>()
+              .HasOne(t => t.Ticket)
+              .WithMany(a => a.Attachments)
+              .HasForeignKey(t => t.TicketId)
+              .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Priority>().HasData(
             new Priority { PriorityId = 1, Name = "Low" },
