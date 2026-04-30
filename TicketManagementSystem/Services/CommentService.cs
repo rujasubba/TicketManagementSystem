@@ -6,7 +6,7 @@ using TicketManagementSystem.Persistent;
 
 namespace TicketManagementSystem.Services
 {
-    public class CommentService(AppDbContext dbContext) : ICommentService
+    public class CommentService(AppDbContext dbContext, IAttachmentService attachmentService) : ICommentService
     {
         public async Task<CreateCommentDto> CreateAsync(CreateCommentDto model, string userId)
         {
@@ -23,16 +23,35 @@ namespace TicketManagementSystem.Services
             {
                 throw new Exception("User cannot comment on this ticket");
             }
+
+            var attachmentList = new List<CommentAttachment>();
+
+            if (model.Attachments != null && model.Attachments.Any())
+            {
+                foreach (var file in model.Attachments)
+                {
+                    var uploadedFile = await attachmentService.UploadFileAsync(file);
+
+                    attachmentList.Add(new CommentAttachment
+                    {
+                        FileName = uploadedFile.FileName,
+                        FilePath = uploadedFile.FilePath
+                    });
+                }
+            }
             var comment = new Comment
             {
                 Content = model.Content,
                 CreatedByUserId = userId,
-               
                 CreatedDate = DateTime.Now,
-                TicketId = model.TicketId
+                TicketId = model.TicketId,
+                Attachments = attachmentList
+                
             };
            await  dbContext.Comments.AddAsync(comment);
             await dbContext.SaveChangesAsync();
+            model.SavedAttachments = attachmentList;
+           
             return model;
         }
 

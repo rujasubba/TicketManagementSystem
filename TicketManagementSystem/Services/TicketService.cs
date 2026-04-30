@@ -310,6 +310,10 @@ namespace TicketManagementSystem.Services
         .Include(t => t.Attachments)
         .Include(t => t.TicketLogs)
         .ThenInclude(tl => tl.AssignedUser)
+         .Include(t => t.Comments)
+        .ThenInclude(c => c.CreatedByUser)
+    .Include(t => t.Comments)             
+        .ThenInclude(c => c.Attachments)
         .FirstOrDefaultAsync(t => t.Id == id);
       
         }
@@ -439,6 +443,7 @@ namespace TicketManagementSystem.Services
             ticket.StatusId = dto.Status;
             ticket.DepartmentId = dto.Department;
             ticket.AssignedToUserId = dto.AssignedUser;
+
             ticket.Comments = commentList;
             ticket.Attachments = attachmentList;
 

@@ -88,6 +88,12 @@ namespace TicketManagementSystem.Persistent
               .HasForeignKey(t => t.TicketId)
               .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<CommentAttachment>()
+              .HasOne(t => t.Comment)
+              .WithMany(a => a.Attachments)
+              .HasForeignKey(t => t.CommentId)
+              .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Priority>().HasData(
             new Priority { PriorityId = 1, Name = "Low" },
             new Priority { PriorityId = 2, Name = "Medium" },

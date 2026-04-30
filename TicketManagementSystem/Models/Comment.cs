@@ -10,5 +10,6 @@
        
         public Ticket Ticket { get; set; }
         public int TicketId { get; set; }
+        public List<CommentAttachment> Attachments { get; set; }
     }
 }

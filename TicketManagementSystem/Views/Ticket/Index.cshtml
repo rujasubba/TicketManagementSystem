@@ -37,7 +37,13 @@
             {
                 <tr id="ticketRow-@item.Id" style="cursor:pointer;">
                     <td>@index</td>
-                    <td>@item.TicketNo</td>
+                    <td>
+                        <a href="/Ticket/Details/@item.Id" style="text-decoration: none;">
+                            @item.TicketNo
+                        </a>
+                    </td>
+                    
+                   
                     <td>@item.Title</td>
                     <td>@item.Description</td>
                     <td>@item.Priority</td>

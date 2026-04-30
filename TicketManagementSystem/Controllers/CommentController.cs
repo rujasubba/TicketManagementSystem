@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TicketManagementSystem.DTOs.Comment;
 using TicketManagementSystem.Interfaces;
@@ -17,12 +18,21 @@ namespace TicketManagementSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateCommentDto dto)
         {
+           
             var comment = await service.CreateAsync(dto, UserId);
+           
             return Ok(
                 new
                 {
                     content = comment.Content,
-                 
+                   createdBy = UserId,
+                    createdDate = DateTime.Now.ToString("yyyy-MM-dd hh:mm tt"),
+                    attachments = comment.SavedAttachments?.Select(a => new
+                    {
+                        fileName = a.FileName,
+                        filePath = a.FilePath
+                    })
+
                 });
         }
     }
