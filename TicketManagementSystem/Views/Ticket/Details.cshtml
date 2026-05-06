@@ -22,7 +22,7 @@
                                     <small>@comment.CreatedByUser?.FullName</small><br />
                                     <small class="text-muted">@comment.CreatedDate.ToString("yyyy-MM-dd hh:mm tt")</small>
                                 </div>
-                               @*  <div>@comment.Content</div> *@
+                                <div>@comment.Content</div>
                                 @if (comment.Attachments != null && comment.Attachments.Any())
                                     {
                                             <ul class="list-group mt-2">
@@ -30,8 +30,31 @@
                                               {
                                                   <li class="list-group-item d-flex justify-content-between">
                                                   <span>@file.FileName</span>
-                                                 <a href="@file.FilePath" target="_blank">View</a>
-                                                    </li>
+
+                                                 @* <a href="@file.FilePath" class="comment-attachment-view" target="_blank">View</a> *@
+
+
+                                                 @{
+                                                  var filePath = file.FilePath.StartsWith("/") ? file.FilePath : "/" + file.FilePath;
+                                                  var isImage = System.Text.RegularExpressions.Regex.IsMatch(filePath, @"\.(jpg|jpeg|png|gif|bmp|webp|svg)$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                                                  }
+
+                                         @if (isImage)
+                                             {
+                                               <a class="btn btn-sm btn-outline-primary img-view-btn"
+                                                  data-img-path="@filePath"
+                                                  data-img-name="@file.FileName">
+                                                  <i class="bi bi-eye"></i> View
+                                               </a>
+                                            }
+                                        else
+                                            {
+                                              <a href="@filePath" target="_blank"
+                                              class="btn btn-sm btn-outline-primary">
+                                               <i class="bi bi-eye"></i> View
+                                             </a>
+                                             }
+                                         </li>
                                                 }
                                        </ul>
                                      }
@@ -52,10 +75,17 @@
                    
                     <div class="mb-2">
                         <label class="form-label small text-muted">Attachments (optional)</label>
-                        <input type="file" id="commentAttachments" class="form-control form-control-sm"
-                               multiple accept="*/*" />
-                        <div id="attachmentPreview" class="mt-1 d-flex flex-wrap gap-1"></div>
+                        <div class="attachmentsContainer">
+                            <input type="file" id="commentAttachments" class="form-control form-control-sm"
+                                   multiple accept="*/*" />
+                            <div id="attachmentPreview" class="mt-1 d-flex flex-wrap gap-1"></div>
+                        </div>
+                        
+                        <button type="button" id="addAttachmentBtn" class="btn btn-success btn-sm mt-2">
+                            + Add Another Attachment
+                        </button>
                     </div>
+                    
 
                     <button id="addCommentBtn" class="btn btn-primary btn-sm">
                         <i class="bi bi-send"></i> Add Comment
