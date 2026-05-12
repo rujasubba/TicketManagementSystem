@@ -17,5 +17,7 @@ namespace TicketManagementSystem.Interfaces
         Task<Ticket> UpdateAsync(CreateTicketDto model);
         Task DeleteAsync(int id);
 
+        Task<List<TicketListDto>> GetFilteredAsync(string userId, TicketFilterDto filter);
+
     }
 }

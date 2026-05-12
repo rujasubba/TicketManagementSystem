@@ -41,18 +41,29 @@
 
                                          @if (isImage)
                                              {
-                                               <a class="btn btn-sm btn-outline-primary img-view-btn"
+                                               <a class="btn btn-sm me-2 btn-outline-primary img-view-btn"
                                                   data-img-path="@filePath"
                                                   data-img-name="@file.FileName">
                                                   <i class="bi bi-eye"></i> View
                                                </a>
+                                                    <a class="btn btn-sm btn-outline-primary img-view-btn"
+                                                       data-img-path="@filePath"
+                                                       data-img-name="@file.FileName">
+                                                        <i class="bi bi-eye"></i> Delete
+                                                    </a>
+
                                             }
                                         else
                                             {
                                               <a href="@filePath" target="_blank"
-                                              class="btn btn-sm btn-outline-primary">
+                                              class="btn btn-sm me-2 btn-outline-primary">
                                                <i class="bi bi-eye"></i> View
                                              </a>
+                                                    <a class="btn btn-sm btn-outline-primary img-view-btn"
+                                                       data-img-path="@filePath"
+                                                       data-img-name="@file.FileName">
+                                                        <i class="bi bi-eye"></i> Delete
+                                                    </a>
                                              }
                                          </li>
                                                 }
@@ -133,6 +144,7 @@
                                        data-img-name="@attachment.AttachmentName">
                                         <i class="bi bi-eye"></i> View
                                     </a>
+                                    
                                 </li>
                             }
                         </ul>

@@ -11,15 +11,26 @@ namespace TicketManagementSystem.Controllers
     [Authorize]
     public class TicketController(AppDbContext dbContext, ITicketService service) : BaseController
     {
-        public async Task <IActionResult> Index()
+        //public async Task <IActionResult> Index()
+        //{
+        //    ViewBag.CurrentUser = UserId;
+        //    var ticketList = await service.GetAllAsyncByUserId(UserId);
+
+        //    return View(ticketList);
+        //}
+
+        public async Task<IActionResult> Index([FromQuery] TicketFilterDto filter)
         {
             ViewBag.CurrentUser = UserId;
-            var ticketList = await service.GetAllAsyncByUserId(UserId);
+            ViewBag.Priorities = dbContext.Priorities.ToList();
+            ViewBag.Statuses = dbContext.Status.ToList();
+            ViewBag.Categories = dbContext.Categories.ToList();
+            ViewBag.Departments = dbContext.Departments.ToList();
+            ViewBag.Filter = filter;
 
+            var ticketList = await service.GetFilteredAsync(UserId, filter);
             return View(ticketList);
         }
-
-       
 
         [HttpGet]
         public IActionResult Create(CreateTicketDto model)

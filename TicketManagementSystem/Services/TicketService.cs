@@ -451,5 +451,76 @@ namespace TicketManagementSystem.Services
 
             return ticket;
         }
+
+
+
+        public async Task<List<TicketListDto>> GetFilteredAsync(string userId, TicketFilterDto filter)
+        {
+            var query = dbContext.Tickets
+                .Include(t => t.Priority)
+                .Include(t => t.Category)
+                .Include(t => t.Status)
+                .Include(t => t.Department)
+                .Include(t => t.CreatedByUser)
+                .Include(t => t.TicketLogs)
+                .Where(t => t.TicketLogs.Any(tl => tl.AssignedUserId == userId))
+                .AsQueryable();
+
+           
+            if (!string.IsNullOrWhiteSpace(filter.Search))
+            {
+                var term = filter.Search.Trim().ToLower();
+                query = query.Where(t =>
+                    t.Title.ToLower().Contains(term) ||
+                    t.Description.ToLower().Contains(term) ||
+                    t.TicketNo.ToLower().Contains(term));
+            }
+
+           
+            if (filter.PriorityId.HasValue)
+                query = query.Where(t => t.PriorityId == filter.PriorityId.Value);
+
+            if (filter.StatusId.HasValue)
+                query = query.Where(t => t.StatusId == filter.StatusId.Value);
+
+            if (filter.CategoryId.HasValue)
+                query = query.Where(t => t.CategoryId == filter.CategoryId.Value);
+
+            if (filter.DepartmentId.HasValue)
+                query = query.Where(t => t.DepartmentId == filter.DepartmentId.Value);
+
+            query = filter.SortBy?.ToLower() switch
+            {
+                "title" => query.OrderByDescending(t => t.Title),
+                "priority" => query.OrderByDescending(t => t.PriorityId),
+                "status" => query.OrderByDescending(t => t.StatusId),
+                "ticketno" => query.OrderByDescending(t => t.TicketNo),
+                "createddate" => query.OrderByDescending(t => t.CreatedDate),
+
+                _ => query.OrderByDescending(t => t.CreatedDate)
+            };
+
+         
+
+            return await query
+                .Select(t => new TicketListDto
+                {
+                    Id = t.Id,
+                    TicketNo = t.TicketNo,
+                    Title = t.Title,
+                    Description = t.Description,
+                    PriorityId = t.PriorityId,
+                    Priority = t.Priority.Name,
+                    Category = t.Category.Name,
+                    Status = t.Status.Name,
+                    CreatedByUserId = t.CreatedByUserId,
+                    CreatedByFullName = t.CreatedByUser.FullName,
+                    AssignedToUserId = t.AssignedToUserId,
+                    AssignedToFullName = t.AssigenedUser.FullName,
+                    Department = t.Department.Name,
+                    CreatedDate = t.CreatedDate
+                })
+                .ToListAsync();
+        }
     }
 }
