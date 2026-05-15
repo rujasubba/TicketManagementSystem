@@ -1,0 +1,204 @@
+﻿@model TicketManagementSystem.DTOs.UserDetailsDto
+@{
+    ViewData["Title"] = "Add User Details";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title mb-4">Enter User Details</h5>
+
+                <div id="formErrors" class="alert alert-danger" style="display:none;"></div>
+                <div id="formSuccess" class="alert alert-success" style="display:none;"></div>
+
+                <form id="userDetailsForm">
+                    @Html.AntiForgeryToken()
+
+                    
+                    <div class="form-floating mb-3">
+                        <select asp-for="UserId"
+                                asp-items="ViewBag.UserSelectList"
+                                class="form-select"
+                                id="userDropdown">
+                            <option value="">-- Select User --</option>
+                        </select>
+                        <label asp-for="UserId">Select User</label>
+                        <span asp-validation-for="UserId" class="text-danger"></span>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input asp-for="FirstName" class="form-control" id="FirstName" />
+                                <label asp-for="FirstName">First Name</label>
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input asp-for="LastName" class="form-control" id="LastName" />
+                                <label asp-for="LastName">Last Name</label>
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input asp-for="Email"
+                               class="form-control"
+                               id="Email"
+                               placeholder="name@example.com" />
+                        <label asp-for="Email">Email</label>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input asp-for="PhoneNumber" class="form-control" id="PhoneNumber" />
+                                <label asp-for="PhoneNumber">Phone Number</label>
+                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input asp-for="Age" class="form-control" id="Age" />
+                                <label asp-for="Age">Age</label>
+                                <span asp-validation-for="Age" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input asp-for="Address" class="form-control" id="Address" />
+                        <label asp-for="Address">Address</label>
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+
+                    
+                    <div class="form-floating mb-4">
+                        <select asp-for="DepartmentId"
+                                asp-items="ViewBag.Departments"
+                                class="form-select"
+                                id="DepartmentId">
+                            <option value="">-- Select Department --</option>
+                        </select>
+                        <label asp-for="DepartmentId">Department</label>
+                        <span asp-validation-for="DepartmentId" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button id="userDetailsSubmit" type="button" class="btn btn-primary w-100">
+                            <span id="submitSpinner"
+                                  class="spinner-border spinner-border-sm me-1"
+                                  style="display:none;"
+                                  role="status"></span>
+                            Save
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-secondary w-100">Cancel</a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        const usersData = @Html.Raw(ViewBag.UsersJson);
+
+        $(document).ready(function () {
+                $('#formErrors').hide();
+        $('#formSuccess').hide();
+
+            $('#userDropdown').on('change', function () {
+                const selectedId = $(this).val();
+                const user = usersData.find(u => u.id === selectedId);
+
+                if (user) {
+                    $('#FirstName').val(user.firstName);
+                    $('#LastName').val(user.lastName);
+                    $('#Email').val(user.email);
+                    $('#PhoneNumber').val(user.phoneNumber ?? '');
+                    $('#Address').val(user.address ?? '');
+                    $('#Age').val('');
+                    $('#DepartmentId').val('');
+                } else {
+                    $('#FirstName, #LastName, #Email, #PhoneNumber, #Address').val('');
+                    $('#Age').val('');
+                    $('#DepartmentId').val('');
+                }
+            });
+
+            $('#userDetailsSubmit').on('click', function () {
+                $('#formErrors').hide().html('');
+                $('#formSuccess').hide().html('');
+
+                const userId = $('#userDropdown').val();
+                if (!userId) {
+                    $('#formErrors').html('Please select a user.').show();
+                    return;
+                }
+
+                const data = {
+                    userId:       userId,
+                    firstName:    $('#FirstName').val().trim(),
+                    lastName:     $('#LastName').val().trim(),
+                    email:        $('#Email').val().trim(),
+                    phoneNumber:  $('#PhoneNumber').val().trim(),
+                    age:          parseInt($('#Age').val()) || 0,
+                    address:      $('#Address').val().trim(),
+                    departmentId: $('#DepartmentId').val() || null
+                };
+
+                  console.log('Data:', data);
+
+                $('#submitSpinner').show();
+                $('#userDetailsSubmit').prop('disabled', true);
+
+                $.ajax({
+                    url: '/UserDetails/Create',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function () {
+                        $('#formSuccess').html('User details saved successfully.').show();
+                        $('#userDetailsForm')[0].reset();
+                        $('#FirstName, #LastName, #Email, #PhoneNumber, #Address').val('');
+                    },
+                    error: function (xhr) {
+                        if (xhr.status === 400) {
+                            const errors = xhr.responseJSON;
+                            let messages = '';
+                            $.each(errors, function (key, val) {
+                                $.each(val.errors, function (i, err) {
+                                    messages += err + '<br/>';
+                                });
+                            });
+                            $('#formErrors').html(messages).show();
+                        } else if (xhr.status === 401) {
+                            window.location.href = '/Identity/Account/Login';
+                        } else {
+                            $('#formErrors').html('Something went wrong. Please try again.').show();
+                        }
+                    },
+                    complete: function () {
+                        $('#submitSpinner').hide();
+                        $('#userDetailsSubmit').prop('disabled', false);
+                    }
+                });
+            });
+
+        });
+    </script>
+}

@@ -10,6 +10,7 @@ namespace TicketManagementSystem.Persistent
         {
         }
         public DbSet<User> Users { get; set; }
+        public DbSet<UserDetails> UserDetails { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Status> Status { get; set; }
