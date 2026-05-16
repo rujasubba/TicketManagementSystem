@@ -9,6 +9,13 @@ namespace TicketManagementSystem.Controllers
     public class UserDetailsController(IUserDetailsService service) : BaseController
     {
         [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var users = await service.GetAllUsersAsync();
+            return View(users);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             var formData = await service.GetFormDataAsync();

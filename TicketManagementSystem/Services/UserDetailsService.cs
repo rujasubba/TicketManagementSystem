@@ -66,12 +66,12 @@ namespace TicketManagementSystem.Services
             return dto;
         }
 
-        public async Task<List<UserDetailsDto>> GetAllAsync()
+        public async Task<List<UserListDto>> GetAllAsync()
         {
             return await dbContext.UserDetails
                 .Include(ud => ud.User)
                 .Include(ud => ud.Department)
-                .Select(ud => new UserDetailsDto
+                .Select(ud => new UserListDto
                 {
                     UserId = ud.UserId,
                     FirstName = ud.FirstName,
@@ -81,7 +81,7 @@ namespace TicketManagementSystem.Services
                     PhoneNumber = ud.PhoneNumber,
                     Age = ud.Age,
                     Address = ud.Address,
-                    DepartmentId = ud.DepartmentId
+                    DepartmentName = ud.Department != null ? ud.Department.Name : "N/A"
                 })
                 .ToListAsync();
         }
@@ -98,16 +98,47 @@ namespace TicketManagementSystem.Services
 
             return new UserDetailsDto
             {
+                Id = ud.Id,
                 UserId = ud.UserId,
                 FirstName = ud.FirstName,
                 LastName = ud.LastName,
-                
                 Email = ud.Email,
                 PhoneNumber = ud.PhoneNumber,
                 Age = ud.Age,
                 Address = ud.Address,
                 DepartmentId = ud.DepartmentId
             };
+        }
+
+        public async Task<List<UserListDto>> GetAllUsersAsync()
+        {
+            var users = await userManager.Users.ToListAsync();
+
+            var userDetails = await dbContext.UserDetails
+                .Include(ud => ud.Department)
+                .ToListAsync();
+
+            var result = users.Select(u =>
+            {
+                var details = userDetails.FirstOrDefault(ud => ud.UserId == u.Id);
+
+                return new UserListDto
+                {
+                    UserId = u.Id,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+
+                    Email = u.Email,
+                    PhoneNumber = u.PhoneNumber,
+                    IsActive = u.IsActive,
+                    Age = details?.Age,
+                    Address = details?.Address,
+                    DepartmentName = details?.Department?.Name,
+                    HasDetails = details != null
+                };
+            }).ToList();
+
+            return result;
         }
     }
 }

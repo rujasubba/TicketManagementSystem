@@ -7,7 +7,8 @@ namespace TicketManagementSystem.Interfaces
     {
         Task<UserDetailsFormDto> GetFormDataAsync();
         Task<UserDetailsDto> CreateAsync(UserDetailsDto dto);
-        Task<List<UserDetailsDto>> GetAllAsync();
+        Task<List<UserListDto>> GetAllAsync();
         Task<UserDetailsDto> GetByIdAsync(int id);
+        Task<List<UserListDto>> GetAllUsersAsync();
     }
 }
